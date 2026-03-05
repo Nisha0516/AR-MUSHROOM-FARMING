@@ -1,0 +1,94 @@
+/* Header CSS */
+header .navbar {
+  position: absolute;
+  width: 100%;
+  background-color: transparent !important;
+  z-index: 1000;
+}
+
+header .logo img {
+  width: auto;
+  max-width: inherit;
+  max-height: 80px;
+}
+
+header .nav-link {
+  display: inline-flex;
+  justify-content: center;
+  color: var(--light-black);
+  /* Default to black for light backgrounds */
+  padding: 0 0.6rem !important;
+  /* Reduced padding for extra links */
+  font-size: 1rem;
+  /* Slightly smaller font to fit well */
+  font-weight: 500;
+  font-family: var(--oswald-font);
+  text-transform: uppercase;
+  -webkit-transition: all 15ms ease-in-out;
+  -ms-transition: all 15ms ease-in-out;
+  -o-transition: all 15ms ease-in-out;
+  -moz-transition: all 15ms ease-in-out;
+  transition: all 15ms ease-in-out;
+}
+
+header .nav-link {
+  color: var(--yellow);
+}
+
+/* Specific Fix for Dark Background Pages like Consultancy & Home */
+.consultancy-page header .navbar .nav-link,
+.home-page header .navbar .nav-link {
+  color: var(--white) !important;
+}
+
+.consultancy-page header .navbar .logo img,
+.home-page header .navbar .logo img {
+  filter: brightness(0) invert(1);
+}
+
+header .cart {
+  position: relative;
+  top: -0.4375rem;
+}
+
+header .roundpoint {
+  width: 16px;
+  height: 16px;
+  background: var(--light-red);
+  border-radius: 50%;
+  color: var(--white);
+  font-size: 11.2px;
+  line-height: 16px;
+  text-align: center;
+  font-style: normal;
+  position: absolute;
+  top: 3.2px;
+  right: -8px;
+}
+
+/* Media Query CSS */
+
+@media (max-width: 992px) {
+  header .navbar {
+    background-color: var(--white);
+  }
+
+  header .navbar-toggler {
+    border: none;
+  }
+
+  header .navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  header .navbar-toggler-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  header .nav-link {
+    color: var(--light-black);
+    padding: 1rem !important;
+  }
+}

@@ -1,0 +1,66 @@
+/* Contact Page Styles */
+.contact_hero_section {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("../assets/hero/hero-1.jpg") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    border-bottom: 4px solid var(--light-red);
+}
+
+.contact_content {
+    background-color: var(--light-grey);
+}
+
+.contact_content h3 {
+    font-family: var(--oswald-font);
+    color: var(--light-red);
+    font-weight: 600;
+}
+
+.contact_content h5 {
+    font-family: var(--oswald-font);
+    color: var(--light-black);
+}
+
+.contact_content .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact_content .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.contact-form label {
+    font-weight: 600;
+    color: var(--light-black);
+}
+
+.contact-form .form-control,
+.contact-form .form-select {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+.contact-form .form-control:focus,
+.contact-form .form-select:focus {
+    border-color: var(--light-red);
+    box-shadow: 0 0 0 0.2rem rgba(193, 39, 45, 0.25);
+}
+
+.submit-btn {
+    background: var(--light-red);
+    color: var(--white);
+    border: none;
+    font-weight: 600;
+    font-family: var(--oswald-font);
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #a01f28;
+    /* darker red hover */
+    transform: scale(1.02);
+}

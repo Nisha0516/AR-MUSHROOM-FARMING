@@ -1,0 +1,227 @@
+/* Consultancy Hub Shared Styles */
+
+.consultancy-page {
+    background-color: var(--bg-coffee);
+    min-height: 100vh;
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background Animated Orbs */
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.4;
+    animation: float 20s infinite ease-in-out alternate;
+}
+
+.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--light-red) 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--yellow) 0%, transparent 70%);
+    bottom: 20%;
+    right: -150px;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(50px, -50px) scale(1.1);
+    }
+}
+
+/* Base Component Z-Indexing */
+.consultancy-page .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Glassmorphism Classes */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Enterprise Hero */
+.enterprise-hero {
+    padding: 120px 0 80px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+}
+
+.hero-title .highlight {
+    color: var(--yellow);
+    position: relative;
+    display: inline-block;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 700px;
+    margin: 0 auto 40px;
+}
+
+/* Packages */
+.packages-section {
+    padding: 80px 0;
+}
+
+.package-card {
+    padding: 40px 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.package-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.package-icon {
+    font-size: 2.5rem;
+    color: var(--light-red);
+    margin-bottom: 15px;
+}
+
+.package-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.package-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--yellow);
+}
+
+.package-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px;
+    flex-grow: 1;
+}
+
+.package-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+}
+
+.package-features li i {
+    color: var(--success, #28a745);
+    margin-right: 10px;
+}
+
+/* Recommended Highlight */
+.package-card.recommended {
+    border: 2px solid var(--yellow);
+    background: rgba(255, 255, 255, 0.08);
+    position: relative;
+    transform: scale(1.05);
+}
+
+.package-card.recommended:hover {
+    transform: scale(1.05) translateY(-5px);
+}
+
+.recommended-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--yellow);
+    color: var(--bg-coffee);
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Yield Calculator */
+.calculator-section {
+    padding: 80px 0 120px;
+}
+
+.yield-calculator {
+    padding: 40px;
+}
+
+.calc-slider {
+    margin-bottom: 30px;
+}
+
+.calc-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: var(--yellow);
+}
+
+.form-range::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.result-box {
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.result-value {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    margin-bottom: 5px;
+}
+
+.result-label {
+    color: var(--yellow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
