@@ -1,10 +1,65 @@
-import React from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 import Layout from "../../components/Layouts/Layout";
 import { FaPhoneAlt, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { inquiryAPI } from "../../services/api";
 import "../../styles/ContactStyle.css";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const handleInputChange = (e) => {
+    const { id, value, name } = e.target;
+    // Fallback support for id attribute mappings if a name isn't directly assigned
+    let mappedName = name;
+    if (!name) {
+      if (id === 'formName') mappedName = 'name';
+      else if (id === 'formEmail') mappedName = 'email';
+      else if (id === 'formPhone') mappedName = 'phone';
+      else if (id === 'formService') mappedName = 'service';
+      else if (id === 'formMessage') mappedName = 'message';
+    }
+
+    setFormData({ ...formData, [mappedName]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await inquiryAPI.create(formData);
+      if (response.success) {
+        setSuccess("Thank you for reaching out! A representative will contact you shortly.");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: ""
+        });
+      } else {
+        setError(response.message || "Failed to submit inquiry. Please try again.");
+      }
+    } catch (err) {
+      console.error("Inquiry error:", err);
+      setError("Network error. Please make sure the server is available.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Layout>
       {/* Contact Hero Section */}
@@ -50,8 +105,8 @@ const Contact = () => {
                   <Card className="border-0 shadow-sm text-center h-100 py-4">
                     <Card.Body>
                       <FaClock size={40} className="mb-3" style={{ color: 'var(--bg-coffee)' }} />
-                      <h5 className="font-weight-bold">AR & 3D Support</h5>
-                      <p className="text-muted mb-0">support@ar-mushroom.com<br />24/7 technical assistance</p>
+                      <h5 className="font-weight-bold">Customer Service</h5>
+                      <p className="text-muted mb-0">support@ar-mushroom.com<br />Order & Product Assistance</p>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -64,20 +119,24 @@ const Contact = () => {
                 <Card.Body>
                   <h3 className="mb-4">Request a Consultation</h3>
                   <p className="text-muted mb-4">
-                    Fill out the form below to receive a custom quote for 3D modeling, layout mapping, or bulk supply.
+                    Fill out the form below to receive assistance with your order, product questions, or bulk supply.
                   </p>
-                  <Form className="contact-form">
+
+                  {success && <Alert variant="success">{success}</Alert>}
+                  {error && <Alert variant="danger">{error}</Alert>}
+
+                  <Form className="contact-form" onSubmit={handleSubmit}>
                     <Row>
                       <Col md={6} className="mb-3">
                         <Form.Group controlId="formName">
                           <Form.Label>Full Name</Form.Label>
-                          <Form.Control type="text" placeholder="Enter your name" required />
+                          <Form.Control type="text" placeholder="Enter your name" value={formData.name} onChange={handleInputChange} required />
                         </Form.Group>
                       </Col>
                       <Col md={6} className="mb-3">
                         <Form.Group controlId="formEmail">
                           <Form.Label>Email Address</Form.Label>
-                          <Form.Control type="email" placeholder="name@company.com" required />
+                          <Form.Control type="email" placeholder="name@company.com" value={formData.email} onChange={handleInputChange} required />
                         </Form.Group>
                       </Col>
                     </Row>
@@ -86,17 +145,17 @@ const Contact = () => {
                       <Col md={6} className="mb-3">
                         <Form.Group controlId="formPhone">
                           <Form.Label>Phone Number</Form.Label>
-                          <Form.Control type="tel" placeholder="(123) 456-7890" />
+                          <Form.Control type="tel" placeholder="(123) 456-7890" value={formData.phone} onChange={handleInputChange} />
                         </Form.Group>
                       </Col>
                       <Col md={6} className="mb-3">
                         <Form.Group controlId="formService">
                           <Form.Label>Inquiry Type</Form.Label>
-                          <Form.Select required>
-                            <option value="">Select a service...</option>
-                            <option value="ar-models">3D/AR Model Commission</option>
-                            <option value="consulting">Farm Layout Consulting</option>
-                            <option value="bulk-order">Bulk Mushroom Order</option>
+                          <Form.Select value={formData.service} onChange={handleInputChange} required>
+                            <option value="">Select an inquiry type...</option>
+                            <option value="order-support">Order Support</option>
+                            <option value="product-question">Product Questions</option>
+                            <option value="bulk-order">Bulk Supplies & Spores</option>
                             <option value="other">Other</option>
                           </Form.Select>
                         </Form.Group>
@@ -105,11 +164,11 @@ const Contact = () => {
 
                     <Form.Group className="mb-4" controlId="formMessage">
                       <Form.Label>Your Message</Form.Label>
-                      <Form.Control as="textarea" rows={6} placeholder="How can we help optimize your yields?" required />
+                      <Form.Control as="textarea" rows={6} placeholder="How can we help optimize your yields?" value={formData.message} onChange={handleInputChange} required />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit" size="lg" className="w-100 submit-btn">
-                      Send Message
+                    <Button variant="primary" type="submit" size="lg" className="w-100 submit-btn" disabled={loading}>
+                      {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Send Message"}
                     </Button>
                   </Form>
                 </Card.Body>

@@ -2,17 +2,15 @@ import React, { useContext, useState } from "react";
 import { Col, Card, Button, Modal, Row, Form } from "react-bootstrap";
 import { CartContext } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import ARViewer from "../ARViewer";
 
 function Cards({ id, type, image, rating, title, paragraph, price, measures, prices, renderRatingIcons, modelUrl }) {
   const { addToCart } = useContext(CartContext);
-  const [showAR, setShowAR] = useState(false);
   const [showProcess, setShowProcess] = useState(false);
   const [isFav, setIsFav] = useState(false);
-  const [selectedMeasure, setSelectedMeasure] = useState(measures ? measures[0] : null);
+  const [selectedMeasure, setSelectedMeasure] = useState(measures && measures.length > 0 ? measures[0] : null);
   const navigate = useNavigate();
 
-  const currentPrice = selectedMeasure && prices ? prices[selectedMeasure] : price;
+  const currentPrice = selectedMeasure && prices && prices[selectedMeasure] ? prices[selectedMeasure] : price;
 
   const handleAddToCart = () => {
     addToCart({
@@ -29,7 +27,7 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
   return (
     <>
       <Col sm={6} lg={4} xl={3} className="mb-4">
-        <Card className="h-100 border-0 shadow-sm overflow-hidden">
+        <Card className="h-100 border-0 shadow-sm overflow-hidden d-flex flex-column">
           <div className="card_image_container position-relative">
             <Card.Img variant="top" src={image} className="img-fluid" style={{ height: '220px', objectFit: 'cover' }} />
             {type === 'produce' && (
@@ -39,25 +37,35 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
 
           <Card.Body className="d-flex flex-column">
             <div className="d-flex align-items-start justify-content-between mb-2">
-              <Card.Title className="mb-0 card-title">{title}</Card.Title>
-              <div className="wishlist ms-2" onClick={() => setIsFav(!isFav)}>
-                <i className={`bi ${isFav ? 'bi-heart-fill active' : 'bi-heart'}`}></i>
+              <Card.Title className="mb-0 card-title fw-bold text-dark" style={{ fontSize: '1.1rem' }}>{title}</Card.Title>
+              <div className="wishlist ms-2" onClick={() => setIsFav(!isFav)} style={{ cursor: 'pointer' }}>
+                <i className={`bi ${isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'}`}></i>
               </div>
             </div>
 
-            <Card.Text className="card-text flex-grow-1">
+            {/* PRODUCT DESCRIPTION */}
+            <Card.Text
+              className="text-muted small mb-3"
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                minHeight: '4.5em' // maintain uniform card heights
+              }}
+            >
               {paragraph}
             </Card.Text>
 
             {/* Measure Selection for Produce */}
-            {type === 'produce' && measures && (
-              <div className="mb-3">
-                <Form.Label className="small font-weight-bold text-muted">Select Pack Size:</Form.Label>
+            {type === 'produce' && measures && measures.length > 0 && (
+              <div className="mb-3 mt-auto">
+                <Form.Label className="small font-weight-bold text-muted mb-1">Select Pack Size:</Form.Label>
                 <Form.Select
                   size="sm"
                   value={selectedMeasure}
                   onChange={(e) => setSelectedMeasure(e.target.value)}
-                  className="border-0 bg-light"
+                  className="border-1 bg-light shadow-none"
                 >
                   {measures.map((m) => (
                     <option key={m} value={m}>{m}</option>
@@ -66,34 +74,24 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
               </div>
             )}
 
-            <div className="d-flex align-items-center justify-content-between mt-auto mb-3">
+            <div className="d-flex align-items-center justify-content-between mt-auto pt-3 border-top">
               <div className="menu_price">
-                <h5 className="mb-0">₨{currentPrice}</h5>
+                <h4 className="mb-0 text-dark fw-bold" style={{ letterSpacing: '-0.5px' }}>₨{currentPrice}</h4>
               </div>
-              <div className="item_rating">
+              <div className="item_rating text-warning" style={{ fontSize: '0.9rem' }}>
                 {renderRatingIcons(rating)}
               </div>
             </div>
 
-            <Row className="g-2">
-              {type === 'service' && modelUrl && (
-                <Col xs={12}>
-                  <Button
-                    variant="outline-secondary"
-                    className="ar_btn w-100"
-                    onClick={() => setShowAR(true)}
-                  >
-                    <i className="bi bi-badge-3d me-2"></i>3D Visualization
-                  </Button>
-                </Col>
-              )}
+            <Row className="g-2 mt-3">
               <Col xs={12}>
                 <Button
-                  className="add_to_card_btn w-100"
+                  variant="dark"
+                  className="w-100 rounded-pill fw-bold shadow-sm py-2"
                   onClick={handleAddToCart}
                 >
-                  <i className="bi bi-bag-plus me-2"></i>
-                  {type === 'service' ? "Add to Consultancy" : "Add to Cart"}
+                  <i className="bi bi-cart-plus me-2"></i>
+                  Add to Cart
                 </Button>
               </Col>
             </Row>
@@ -101,50 +99,32 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
         </Card>
       </Col>
 
-      {/* AR Modal */}
-      <Modal show={showAR} onHide={() => setShowAR(false)} centered size="lg">
-        <Modal.Header closeButton className="border-0">
-          <Modal.Title>{title} - 3D Layout Preview</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="p-0">
-          {modelUrl && (
-            <div style={{ height: '500px' }}>
-              <ARViewer src={modelUrl} alt={`3D model of ${title}`} />
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer className="border-0">
-          <Button variant="outline-dark" onClick={() => setShowAR(false)}>
-            Close Preview
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
       {/* Continue Process Modal */}
       <Modal show={showProcess} onHide={() => setShowProcess(false)} centered>
         <Modal.Body className="text-center p-5">
           <div className="mb-4">
             <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
           </div>
-          <h3 className="mb-3 font-weight-bold">Added to Project!</h3>
+          <h3 className="mb-3 font-weight-bold">Added to Cart!</h3>
           <p className="text-muted mb-4">
-            <strong>{title}</strong> has been successfully added to your project cart. Would you like to finalize your details or continue exploring?
+            <strong>{title}</strong> has been successfully added to your shopping cart.
           </p>
           <div className="d-grid gap-2">
             <Button
-              variant="danger"
+              variant="dark"
               size="lg"
+              className="rounded-pill"
               onClick={() => navigate("/checkout")}
-              style={{ backgroundColor: 'var(--light-red)', border: 'none' }}
             >
-              Finalize & Checkout
+              Proceed to Checkout
             </Button>
             <Button
-              variant="outline-secondary"
+              variant="light"
               size="lg"
+              className="rounded-pill text-muted border"
               onClick={() => setShowProcess(false)}
             >
-              Continue Exploring
+              Keep Shopping
             </Button>
           </div>
         </Modal.Body>

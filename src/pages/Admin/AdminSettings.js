@@ -22,7 +22,7 @@ const AdminSettings = () => {
                                 <Row className="mb-4">
                                     <Col md={6}>
                                         <Form.Group>
-                                            <Form.Label className="small text-muted text-uppercase font-weight-bold" style={{ fontFamily: 'var(--admin-font-head)', letterSpacing: '0.5px' }}>AR Module Sensitivity</Form.Label>
+                                            <Form.Label className="small text-muted text-uppercase font-weight-bold" style={{ fontFamily: 'var(--admin-font-head)', letterSpacing: '0.5px' }}>Sensor Module Sensitivity</Form.Label>
                                             <Form.Range defaultValue={80} variant="danger" />
                                         </Form.Group>
                                     </Col>

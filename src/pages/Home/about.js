@@ -13,9 +13,9 @@ const About = () => {
         <Container>
           <Row>
             <Col lg={12} className="text-center">
-              <Badge bg="danger" className="mb-3 p-2 px-3 rounded-pill text-uppercase shadow-sm" style={{ letterSpacing: '2px' }}>Enterprise AR</Badge>
-              <h1 className="text-white mb-4 about_hero_title">Redefining Mycological Architecture</h1>
-              <p className="text-white lead mb-0">Merging Augmented Reality with Sustainable Agriculture</p>
+              <Badge bg="danger" className="mb-3 p-2 px-3 rounded-pill text-uppercase shadow-sm" style={{ letterSpacing: '2px' }}>Your Grow Partner</Badge>
+              <h1 className="text-white mb-4 about_hero_title">Premium Mushroom Supplies</h1>
+              <p className="text-white lead mb-0">High-yield spores, kits, and sterilized grain for all growers</p>
             </Col>
           </Row>
         </Container>
@@ -33,9 +33,9 @@ const About = () => {
                   </div>
                   <h4 className="mb-3">Our Digital Roots</h4>
                   <p className="text-muted">
-                    Founded in 2015, we began with a vision to revolutionize mushroom cultivation. Today, we've
-                    evolved into a tech-first enterprise, using 3D spatial mapping and AR to help farmers
-                    visualize their yields and optimize laboratory layouts before the first brick is laid.
+                    What began as a small-scale pilot for exotic culinary mushrooms quickly
+                    evolved into a tech-first enterprise, using advanced methodologies to help farmers
+                    optimize their yields and transition to sustainable practices.
                   </p>
                 </Card.Body>
               </Card>
@@ -46,11 +46,11 @@ const About = () => {
                   <div className="mb-3">
                     <FaAward className="text-primary" size={48} />
                   </div>
-                  <h4 className="mb-3">Our Tech Mission</h4>
+                  <h4 className="mb-3">Our Mission</h4>
                   <p className="text-muted">
-                    We provide high-precision AR tools and elite genetics to ensure your farm's success.
-                    Our mission is to bridge the gap between complex mycological data and intuitive
-                    visual management, making commercial mushroom production accessible to everyone.
+                    We provide high-precision sterilized substrates and elite genetics to ensure your farm's success.
+                    Our mission is to make commercial and hobbyist mushroom production accessible to everyone by 
+                    providing the highest quality base materials on the market.
                   </p>
                 </Card.Body>
               </Card>
@@ -113,9 +113,9 @@ const About = () => {
                       <FaTruck size={32} />
                     </div>
                   </div>
-                  <h5 className="mb-1">AR Design Lead</h5>
-                  <p className="text-muted small mb-2">Spatial Visualization</p>
-                  <p className="text-muted mb-0">Specialist in immersive interfaces and digital twin farm mapping.</p>
+                  <h5 className="mb-1">Cultivation Lead</h5>
+                  <p className="text-muted small mb-2">Mycology Expert</p>
+                  <p className="text-muted mb-0">Specialist in strain isolation and high-yield fruiting techniques.</p>
                 </Card.Body>
               </Card>
             </Col>

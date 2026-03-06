@@ -1,77 +1,7 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import Image1 from "../../assets/menu/mush-11.jpg";
-import Image2 from "../../assets/menu/mush-12.jpg";
-import Image3 from "../../assets/menu/mush-13.jpg";
-import Image4 from "../../assets/menu/mush-14.jpg";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Spinner, Alert, Form, Button } from "react-bootstrap";
 import Cards from "../../components/Layouts/Cards";
-
-// Hybrid Mock Data: Consultancy & Fresh Produce
-const mockData = [
-  {
-    id: "s001",
-    type: "service",
-    image: Image1,
-    title: "Hobbyist Grow Kit",
-    paragraph: "Complete starter kit with pre-colonized substrate and humidity tent. Yields up to 2kg.",
-    rating: 5,
-    price: 1500,
-    modelUrl: "https://modelviewer.dev/shared-assets/models/shishkebab.glb"
-  },
-  {
-    id: "p001",
-    type: "produce",
-    image: Image2,
-    title: "Fresh Oyster Packets",
-    paragraph: "Organic, farm-fresh oyster mushrooms harvested daily. Sustainably packed.",
-    rating: 5,
-    price: 15,
-    measures: ["200g", "500g", "1kg"],
-    prices: { "200g": 15, "500g": 35, "1kg": 65 }
-  },
-  {
-    id: "s002",
-    type: "service",
-    image: Image3,
-    title: "Spore Bank Access",
-    paragraph: "Annual access to exclusive high-yield strains and genetic consultation.",
-    rating: 5,
-    price: 5000,
-    modelUrl: "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-  },
-  {
-    id: "p002",
-    type: "produce",
-    image: Image4,
-    title: "King Oyster Fresh Pack",
-    paragraph: "Premium King Oyster mushrooms. Thick stems and meaty texture.",
-    rating: 4.8,
-    price: 25,
-    measures: ["250g", "500g", "1kg"],
-    prices: { "250g": 25, "500g": 45, "1kg": 85 }
-  },
-  {
-    id: "s003",
-    type: "service",
-    image: Image1,
-    title: "AR Farm Software",
-    paragraph: "Enterprise-grade AR environmental tracking and yield analytics dashboard.",
-    rating: 5,
-    price: 15000,
-    modelUrl: "https://modelviewer.dev/shared-assets/models/shishkebab.glb"
-  },
-  {
-    id: "p003",
-    type: "produce",
-    image: Image2,
-    title: "Exotic Beech Clusters",
-    paragraph: "Clean, crisp beech mushrooms in convenient measure-controlled packets.",
-    rating: 4.5,
-    price: 20,
-    measures: ["200g", "400g"],
-    prices: { "200g": 20, "400g": 38 }
-  }
-];
+import { mushroomAPI } from "../../services/api";
 
 // Rating Logical Data
 const renderRatingIcons = (rating) => {
@@ -91,37 +21,134 @@ const renderRatingIcons = (rating) => {
   return stars;
 };
 
+// Available expected categories from the database schema
+const CATEGORIES = ["All", "Kit", "Supplies", "Equipment", "Oyster", "Other"];
+
 function ShopSection() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Filtering State
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await mushroomAPI.getAll();
+        if (response.success) {
+          setProducts(response.data);
+        } else {
+          setError("Failed to load inventory from server.");
+        }
+      } catch (err) {
+        setError("Network error connecting to the database.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Filter Logic
+  const filteredProducts = products.filter((mush) => {
+    const matchesSearch = mush.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          mush.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeCategory === "All" || mush.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <section className="menu_section">
       <Container>
         <Row>
           <Col lg={{ span: 8, offset: 2 }} className="text-center mb-5">
-            <h2>OUR PREMIUM CONSULTANCY</h2>
+            <h2>PREMIUM GROWING SUPPLIES</h2>
             <p className="para">
-              Expert AR Development & Farming Layouts
-              Cost-effective digital solutions for agriculture.
+              High-yield spawn, sterilized substrates, and complete grow kits.
             </p>
           </Col>
         </Row>
-        <Row>
-          {mockData.map((cardData, index) => (
-            <Cards
-              key={index}
-              id={cardData.id}
-              type={cardData.type}
-              image={cardData.image}
-              rating={cardData.rating}
-              title={cardData.title}
-              paragraph={cardData.paragraph}
-              price={cardData.price}
-              measures={cardData.measures}
-              prices={cardData.prices}
-              renderRatingIcons={renderRatingIcons}
-              modelUrl={cardData.modelUrl}
+
+        {/* Search and Filter Controls */}
+        <Row className="mb-5 justify-content-center">
+          <Col md={6} className="mb-3 mb-md-0">
+            <Form.Control
+              type="text"
+              placeholder="Search for spawn, kits, supplies..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="rounded-pill shadow-sm"
+              style={{ padding: "0.75rem 1.5rem" }}
             />
-          ))}
+          </Col>
+          <Col md={12} className="mt-4 text-center d-flex flex-wrap justify-content-center gap-2">
+            {CATEGORIES.map((cat) => (
+              <Button
+                key={cat}
+                variant={activeCategory === cat ? "warning" : "outline-secondary"}
+                className={`rounded-pill px-4 ${activeCategory === cat ? "text-dark fw-bold shadow-sm" : ""}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </Button>
+            ))}
+          </Col>
         </Row>
+
+        {loading ? (
+          <Row className="justify-content-center my-5">
+            <Spinner animation="border" style={{ color: "var(--yellow)" }} />
+          </Row>
+        ) : error ? (
+          <Row className="justify-content-center my-5">
+            <Col md={6}>
+              <Alert variant="danger" className="text-center">{error}</Alert>
+            </Col>
+          </Row>
+        ) : (
+          <>
+            {filteredProducts.length === 0 ? (
+              <Row className="justify-content-center my-5 text-center">
+                <Col md={8}>
+                  <h4 className="text-muted">No products found matching your search criteria.</h4>
+                  <Button variant="link" onClick={() => { setSearchTerm(""); setActiveCategory("All"); }}>
+                    Clear Filters
+                  </Button>
+                </Col>
+              </Row>
+            ) : (
+              <Row>
+                {filteredProducts.map((mush) => {
+                  // Pre-process prices object from mongoose Map to plain object for the Cards component
+                  let plainPrices = null;
+                  if (mush.prices && Object.keys(mush.prices).length > 0) {
+                    plainPrices = mush.prices;
+                  }
+
+                  return (
+                    <Cards
+                      key={mush._id}
+                      id={mush._id}
+                      type={mush.type}
+                      image={`http://localhost:5000${mush.image}`}
+                      rating={mush.rating || 5}
+                      title={mush.name}
+                      paragraph={mush.description}
+                      price={mush.price}
+                      measures={mush.measures && mush.measures.length > 0 ? mush.measures : null}
+                      prices={plainPrices}
+                      renderRatingIcons={renderRatingIcons}
+                      modelUrl={mush.modelUrl}
+                    />
+                  );
+                })}
+              </Row>
+            )}
+          </>
+        )}
       </Container>
     </section>
   );

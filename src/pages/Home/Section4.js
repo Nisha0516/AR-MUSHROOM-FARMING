@@ -14,10 +14,9 @@ function Section4() {
             <Col lg={6} className="px-5">
               <h2>Bridging Technology and Agriculture</h2>
               <p>
-                Our AR-Based Mushroom Farming Enterprise is a professional consultancy designed to supply
-                cutting-edge visualizations and layouts for mushroom facilities. We work directly with farms to ensure
-                optimized spacing, temperature management, and workflow efficiency. The platform makes planning easy for growers,
-                offering scalable and profitable data integrations with AR mapping.
+                Our store provides top-tier cultivation supplies for everyone from hobbyists
+                to industrial-scale growers. We offer premium exotic strains, high-yield substrate formulas, 
+                and easy-to-use fruiting blocks, bridging the gap between professional mycologists and home growers.
               </p>
               <ul>
                 <li>

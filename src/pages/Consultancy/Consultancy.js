@@ -84,11 +84,15 @@ const Consultancy = () => {
                                 <div className="glass-card package-card">
                                     <div className="package-header">
                                         <i className="bi bi-laptop package-icon text-white-50"></i>
-                                        <h3 className="package-title text-white">AR Farm Software</h3>
-                                        <div className="package-price text-white-50">₨15k<span style={{ fontSize: '1rem', fontWeight: '400' }}>/mo</span></div>
+                                        <h3 className="package-title text-white">Farm Management Software</h3>
+                                        <div className="package-price text-white mb-4">
+                                            <span className="currency">₨</span>
+                                            <span className="amount">1500</span>
+                                            <span className="period">/month</span>
+                                        </div>
                                     </div>
-                                    <ul className="package-features">
-                                        <li><i className="bi bi-check2-circle"></i> Live AR environmental tracking</li>
+                                    <ul className="package-features text-white list-unstyled mb-5">
+                                        <li><i className="bi bi-check2-circle"></i> Live environmental tracking</li>
                                         <li><i className="bi bi-check2-circle"></i> Automated climate robotics api</li>
                                         <li><i className="bi bi-check2-circle"></i> Full yield analytics dashboard</li>
                                         <li><i className="bi bi-check2-circle"></i> 24/7 technical support</li>

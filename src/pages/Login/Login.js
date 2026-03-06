@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { userAPI } from "../../services/api";
+import { useUser } from "../../context/UserContext";
 import "../../styles/HomeStyle.css";
 
 const Login = () => {
+  const { login } = useUser();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,21 +19,20 @@ const Login = () => {
     setError("");
     setSuccess("");
     setLoading(true);
-    
+
     try {
       const credentials = {
         email: email,
         password: password
       };
-      
+
       const response = await userAPI.login(credentials);
-      
+
       if (response.success) {
         setSuccess("Login successful! Redirecting...");
-        // Store user data and token
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        
+        // Store user data and token in context
+        login(response.data.user, response.data.token);
+
         setTimeout(() => {
           navigate("/");
         }, 1500);
@@ -52,13 +53,13 @@ const Login = () => {
           <Col lg={6} className="mx-auto">
             <div className="login_container p-5 bg-white rounded shadow">
               <h2 className="login_title text-center mb-5">User Login</h2>
-              
+
               {error && (
                 <Alert variant="danger" className="mb-4">
                   {error}
                 </Alert>
               )}
-              
+
               {success && (
                 <Alert variant="success" className="mb-4">
                   {success}

@@ -27,25 +27,25 @@ const apiCall = async (endpoint, options = {}) => {
 export const mushroomAPI = {
   // Get all mushrooms
   getAll: () => apiCall('/mushrooms'),
-  
+
   // Get single mushroom
   getById: (id) => apiCall(`/mushrooms/${id}`),
-  
+
   // Get mushrooms by category
   getByCategory: (category) => apiCall(`/mushrooms/category/${category}`),
-  
+
   // Create new mushroom (admin only)
   create: (mushroomData) => apiCall('/mushrooms', {
     method: 'POST',
     body: JSON.stringify(mushroomData),
   }),
-  
+
   // Update mushroom (admin only)
   update: (id, mushroomData) => apiCall(`/mushrooms/${id}`, {
     method: 'PUT',
     body: JSON.stringify(mushroomData),
   }),
-  
+
   // Delete mushroom (admin only)
   delete: (id) => apiCall(`/mushrooms/${id}`, {
     method: 'DELETE',
@@ -56,19 +56,19 @@ export const mushroomAPI = {
 export const orderAPI = {
   // Get all orders
   getAll: () => apiCall('/orders'),
-  
+
   // Get single order
   getById: (id) => apiCall(`/orders/${id}`),
-  
+
   // Get user's orders
   getUserOrders: (userId) => apiCall(`/orders/user/${userId}`),
-  
+
   // Create new order
   create: (orderData) => apiCall('/orders', {
     method: 'POST',
     body: JSON.stringify(orderData),
   }),
-  
+
   // Update order status
   updateStatus: (id, status) => apiCall(`/orders/${id}/status`, {
     method: 'PUT',
@@ -83,19 +83,19 @@ export const userAPI = {
     method: 'POST',
     body: JSON.stringify(userData),
   }),
-  
+
   // Login user
   login: (credentials) => apiCall('/users/login', {
     method: 'POST',
     body: JSON.stringify(credentials),
   }),
-  
+
   // Get all users
   getAll: () => apiCall('/users'),
-  
+
   // Get single user
   getById: (id) => apiCall(`/users/${id}`),
-  
+
   // Update user
   update: (id, userData) => apiCall(`/users/${id}`, {
     method: 'PUT',
@@ -103,7 +103,50 @@ export const userAPI = {
   }),
 };
 
+// Inquiry API calls
+export const inquiryAPI = {
+  // Create new inquiry
+  create: (inquiryData) => apiCall('/inquiries', {
+    method: 'POST',
+    body: JSON.stringify(inquiryData),
+  }),
+
+  // Get all inquiries (Admin)
+  getAll: () => apiCall('/inquiries'),
+
+  // Update inquiry status
+  updateStatus: (id, status) => apiCall(`/inquiries/${id}/status`, {
+    method: 'PUT',
+    body: JSON.stringify({ status }),
+  }),
+};
+
 // Health check
 export const checkServerHealth = () => apiCall('/health');
+
+// Upload API
+export const uploadAPI = {
+  uploadFile: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // We can't use our standard apiCall wrapper because we need to let the browser set the Content-Type to multipart/form-data organically to include boundary calculations.
+    try {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Upload API Error:', error);
+      throw error;
+    }
+  }
+};
 
 export default apiCall;

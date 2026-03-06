@@ -1,16 +1,46 @@
-import React from "react";
-import { Row, Col, Card, Table, ProgressBar } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Card, Table, ProgressBar, Spinner, Alert } from "react-bootstrap";
 import AdminLayout from "./AdminLayout";
+import { orderAPI } from "../../services/api";
 import "../../styles/AdminStyle.css";
 
 const DashboardHome = () => {
-    // Simulated Metrics
-    const recentOrders = [
-        { id: "ORD-9921", client: "BioAg Corp", product: "AR Software License", status: "Completed", amount: "₨ 15,000" },
-        { id: "ORD-9922", client: "Urban Fungi", product: "Hobbyist Grow Kit x5", status: "Processing", amount: "₨ 7,500" },
-        { id: "ORD-9923", client: "Dr. Aris Veld", product: "Spore Bank Access", status: "Pending", amount: "₨ 5,000" },
-        { id: "ORD-9924", client: "Green Growers", product: "Fresh Oyster Packet x20", status: "Shipped", amount: "₨ 1,300" },
-    ];
+    const [recentOrders, setRecentOrders] = useState([]);
+    const [stats, setStats] = useState({ revenue: 0, active: 0, pending: 0 });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                const response = await orderAPI.getAll();
+                if (response.success) {
+                    const allOrders = response.data;
+
+                    // Sort by newest, take top 5
+                    const sortedOrders = [...allOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    setRecentOrders(sortedOrders.slice(0, 5));
+
+                    // Calculate metrics
+                    const revenue = allOrders
+                        .filter(order => order.status !== 'Cancelled')
+                        .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+                    const activeCount = allOrders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled').length;
+                    const pendingCount = allOrders.filter(o => o.status === 'Pending').length;
+
+                    setStats({ revenue, active: activeCount, pending: pendingCount });
+                } else {
+                    setError("Failed to fetch dashboard metrics.");
+                }
+            } catch (err) {
+                setError("Network error connecting to the database.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
 
     return (
         <AdminLayout>
@@ -21,9 +51,9 @@ const DashboardHome = () => {
                             <i className="bi bi-currency-dollar fs-4"></i>
                         </div>
                         <p className="text-stone small text-uppercase font-weight-bold mb-1">Monthly Revenue</p>
-                        <h4 className="mb-0">₨ 842,500</h4>
+                        <h4 className="mb-0">₨ {stats.revenue.toLocaleString()}</h4>
                         <div className="small text-success mt-2">
-                            <i className="bi bi-graph-up-arrow me-1"></i> +12% from last month
+                            <i className="bi bi-graph-up-arrow me-1"></i> Live Metric
                         </div>
                     </div>
                 </Col>
@@ -33,9 +63,9 @@ const DashboardHome = () => {
                             <i className="bi bi-cart-fill fs-4"></i>
                         </div>
                         <p className="text-stone small text-uppercase font-weight-bold mb-1">Active Orders</p>
-                        <h4 className="mb-0">128</h4>
+                        <h4 className="mb-0">{stats.active}</h4>
                         <div className="small text-stone mt-2">
-                            8 Pending verification
+                            {stats.pending} Pending verification
                         </div>
                     </div>
                 </Col>
@@ -72,35 +102,56 @@ const DashboardHome = () => {
                             <h5 className="font-weight-bold">Recent Procurement Activity</h5>
                         </Card.Header>
                         <Card.Body className="p-4">
-                            <Table responsive borderless className="align-middle">
-                                <thead className="bg-stone">
-                                    <tr className="small text-stone text-uppercase">
-                                        <th className="py-3">Order ID</th>
-                                        <th className="py-3">Client</th>
-                                        <th className="py-3">Product/Service</th>
-                                        <th className="py-3">Status</th>
-                                        <th className="py-3 text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {recentOrders.map((order, idx) => (
-                                        <tr key={idx} className="border-bottom">
-                                            <td className="py-3 font-weight-bold small">{order.id}</td>
-                                            <td className="py-3">{order.client}</td>
-                                            <td className="py-3 small">{order.product}</td>
-                                            <td className="py-3">
-                                                <span className={`badge rounded-pill px-3 py-2 ${order.status === 'Completed' ? 'bg-success-light text-success' :
-                                                    order.status === 'Processing' ? 'bg-primary-light text-primary' :
-                                                        order.status === 'Pending' ? 'bg-warning-light text-warning' : 'bg-info-light text-info'
-                                                    }`} style={{ fontSize: '0.7rem' }}>
-                                                    {order.status}
-                                                </span>
-                                            </td>
-                                            <td className="py-3 text-end font-weight-bold">{order.amount}</td>
+                            {loading ? (
+                                <div className="text-center py-4">
+                                    <Spinner animation="border" size="sm" style={{ color: "var(--admin-accent)", marginRight: "8px" }} />
+                                    <span className="text-muted small">Loading latest orders...</span>
+                                </div>
+                            ) : error ? (
+                                <Alert variant="danger" className="small py-2">{error}</Alert>
+                            ) : (
+                                <Table responsive borderless className="align-middle">
+                                    <thead className="bg-stone">
+                                        <tr className="small text-stone text-uppercase">
+                                            <th className="py-3">Order ID</th>
+                                            <th className="py-3">Client</th>
+                                            <th className="py-3">Product/Service</th>
+                                            <th className="py-3">Status</th>
+                                            <th className="py-3 text-end">Amount</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
+                                    </thead>
+                                    <tbody>
+                                        {recentOrders.map((order, idx) => {
+                                            const shortId = order._id.substring(order._id.length - 6).toUpperCase();
+                                            const clientName = order.user?.name || "Guest User";
+                                            const firstItem = order.items && order.items.length > 0 ? order.items[0].mushroom : null;
+                                            const productName = firstItem ? firstItem.name : "Custom Item";
+
+                                            return (
+                                                <tr key={order._id} className="border-bottom">
+                                                    <td className="py-3 font-weight-bold small">ORD-{shortId}</td>
+                                                    <td className="py-3">{clientName}</td>
+                                                    <td className="py-3 small">{productName} {order.items.length > 1 ? `+${order.items.length - 1} more` : ''}</td>
+                                                    <td className="py-3">
+                                                        <span className={`badge rounded-pill px-3 py-2 ${order.status === 'Completed' ? 'bg-success-light text-success' :
+                                                            order.status === 'Processing' ? 'bg-primary-light text-primary' :
+                                                                order.status === 'Pending' ? 'bg-warning-light text-warning' : 'bg-info-light text-info'
+                                                            }`} style={{ fontSize: '0.7rem' }}>
+                                                            {order.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-3 text-end font-weight-bold">₨ {order.totalAmount.toLocaleString()}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                        {recentOrders.length === 0 && (
+                                            <tr>
+                                                <td colSpan="5" className="text-center py-4 text-muted small">No recent orders.</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </Table>
+                            )}
                         </Card.Body>
                     </Card>
                 </Col>
@@ -152,7 +203,7 @@ const DashboardHome = () => {
                                     <div className="pulse-indicator me-3" style={{ background: '#333', border: '2px solid rgba(0, 0, 0, 0.1)' }}></div>
                                     <div>
                                         <p className="mb-0 font-weight-bold">System Pulse</p>
-                                        <p className="smaller text-muted mb-0">AR-Matrix Gateway heartbeat: STABLE</p>
+                                        <p className="smaller text-muted mb-0">Farm-Matrix Gateway heartbeat: STABLE</p>
                                     </div>
                                 </div>
                             </div>

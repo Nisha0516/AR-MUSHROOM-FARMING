@@ -17,10 +17,24 @@ const mushroomSchema = new mongoose.Schema({
     required: [true, 'Price is required'],
     min: [0, 'Price cannot be negative']
   },
+  type: {
+    type: String,
+    enum: ['produce', 'service', 'product'],
+    default: 'produce'
+  },
+  measures: {
+    type: [String],
+    default: []
+  },
+  prices: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
   category: {
     type: String,
     required: [true, 'Category is required'],
-    enum: ['Button', 'Portobello', 'Shiitake', 'Oyster', 'Cremini', 'Enoki', 'Other']
+    enum: ['Button', 'Portobello', 'Shiitake', 'Oyster', 'Cremini', 'Enoki', 'Kit', 'Service', 'Supplies', 'Equipment', 'Other']
   },
   image: {
     type: String,

@@ -21,14 +21,13 @@ const Section1 = () => {
           </Col>
           <Col lg={5}>
             <div className="hero_text text-center">
-              <h2 className="text-white">AR Based</h2>
-              <h2 className="text-white">Mushroom Farming Enterprise</h2>
+              <h2 className="text-white">Premium Quality</h2>
+              <h2 className="text-white">Mushroom Cultivation Supplies</h2>
               <p className="text-white pt-2 pb-4">
-                Smart Farming Consultancy & 3D Visualization
-                Directly leveraging AR technology to visualize and scale high-yield mushroom production.
+                Everything you need to grow gourmet mushrooms at home.
               </p>
               <p className="text-white pb-4">
-                Enhancing the farming experience through interactive AR models.
+                From beginner grow kits to bulk sterilized spawn for commercial farms.
               </p>
               <Link to="/shop" className="btn order_now">
                 Order Now

@@ -33,7 +33,7 @@ function Footer() {
                 <h5>Laboratory HQ</h5>
                 <p>123 Agriculture Tech Park</p>
                 <p>Innovation District, NY</p>
-                <p>Enterprise Wing A</p>
+                <p>Commercial Wing A</p>
               </div>
             </Col>
             <Col sm={6} lg={4} className="mb-4 mb-lg-0 text-center">
@@ -41,33 +41,33 @@ function Footer() {
                 <h5>Support Hours</h5>
                 <p>Mon-Fri: 9:00AM - 6:00PM EST</p>
                 <p>Saturday: 10:00AM - 2:00PM</p>
-                <p>24/7 AR Technical Support</p>
+                <p>24/7 Customer Support</p>
               </div>
             </Col>
 
             <Col sm={12} lg={4} className="mb-4 mb-lg-0 text-center">
               <div>
                 <h5>Follow Our Vision</h5>
-                <p>Innovating Ag-Tech with Immersive 3D</p>
+                <p>Premium Cultivation Supplies</p>
                 <ul className="list-unstyled text-center d-flex justify-content-center mt-2">
                   <li className="mx-2">
                     <Link to="/">
-                      <i class="bi bi-facebook"></i>
+                      <i className="bi bi-facebook"></i>
                     </Link>
                   </li>
                   <li className="mx-2">
                     <Link to="/">
-                      <i class="bi bi-linkedin"></i>
+                      <i className="bi bi-linkedin"></i>
                     </Link>
                   </li>
                   <li className="mx-2">
                     <Link to="/">
-                      <i class="bi bi-instagram"></i>
+                      <i className="bi bi-instagram"></i>
                     </Link>
                   </li>
                   <li className="mx-2">
                     <Link to="/">
-                      <i class="bi bi-youtube"></i>
+                      <i className="bi bi-youtube"></i>
                     </Link>
                   </li>
                 </ul>
@@ -102,7 +102,7 @@ function Footer() {
       {/* Sroll To Top */}
       {isVisible && (
         <div className="scroll_top" onClick={scrollTop}>
-          <i class="bi bi-arrow-up"></i>
+          <i className="bi bi-arrow-up"></i>
         </div>
       )}
     </>

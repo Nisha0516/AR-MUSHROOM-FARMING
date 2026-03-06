@@ -1,51 +1,7 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import Image1 from "../../assets/menu/mush-11.jpg";
-import Image2 from "../../assets/menu/mush-12.jpg";
-import Image3 from "../../assets/menu/mush-13.jpg";
-import Image4 from "../../assets/menu/mush-14.jpg";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import Cards from "../../components/Layouts/Cards";
-
-// Mock Data Cards
-const mockData = [
-  {
-    id: "0001",
-    image: Image1,
-    title: "button mushroom",
-    paragraph: "high production high taste",
-    rating: 5,
-    price: 99,
-    modelUrl: "https://modelviewer.dev/shared-assets/models/shishkebab.glb"
-  },
-  {
-    id: "0002",
-    image: Image2,
-    title: "Oyster mushroom",
-    paragraph: "Delicate, mild taste with a velvety texture",
-    rating: 4.5,
-    price: 99,
-    modelUrl: "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-  },
-  {
-    id: "0003",
-    image: Image3,
-    title: "King Oyster",
-    paragraph: "Thick stems with a rich, savory taste, perfect for grilling or slicing.",
-    rating: 4,
-    price: 110,
-  },
-  {
-    id: "0004",
-    image: Image4,
-    title: "Beech",
-    paragraph: "Small, nutty, slightly sweet, with a firm crunch.",
-    rating: 3.5,
-    price: 99.25,
-  },
-
-
-  // Add more mock data objects as needed
-];
+import { mushroomAPI } from "../../services/api";
 
 // Rating Logical Data
 const renderRatingIcons = (rating) => {
@@ -66,33 +22,79 @@ const renderRatingIcons = (rating) => {
 };
 
 function Section3() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await mushroomAPI.getAll();
+        if (response.success) {
+          // Display only the first 4 items on the home page showcase
+          setProducts(response.data.slice(0, 4));
+        } else {
+          setError("Failed to load showcase from server.");
+        }
+      } catch (err) {
+        setError("Network error connecting to the database.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <section className="menu_section">
       <Container>
         <Row>
           <Col lg={{ span: 8, offset: 2 }} className="text-center mb-5">
-            <h2>OUR PREMIUM CONSULTANCY</h2>
+            <h2>PREMIUM GROWING SUPPLIES</h2>
             <p className="para">
-              Expert AR Development & Farming Layouts
-              Cost-effective digital solutions for agriculture.
+              High-yield spawn, sterilized substrates, and complete grow kits.
             </p>
           </Col>
         </Row>
-        <Row>
-          {mockData.map((cardData, index) => (
-            <Cards
-              key={index}
-              id={cardData.id}
-              image={cardData.image}
-              rating={cardData.rating}
-              title={cardData.title}
-              paragraph={cardData.paragraph}
-              price={cardData.price}
-              renderRatingIcons={renderRatingIcons}
-              modelUrl={cardData.modelUrl}
-            />
-          ))}
-        </Row>
+
+        {loading ? (
+          <Row className="justify-content-center my-5">
+            <Spinner animation="border" style={{ color: "var(--yellow)" }} />
+          </Row>
+        ) : error ? (
+          <Row className="justify-content-center my-5">
+            <Col md={6}>
+              <Alert variant="danger" className="text-center">{error}</Alert>
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            {products.map((mush) => {
+              let plainPrices = null;
+              if (mush.prices && Object.keys(mush.prices).length > 0) {
+                plainPrices = mush.prices;
+              }
+
+              return (
+                <Cards
+                  key={mush._id}
+                  id={mush._id}
+                  type={mush.type}
+                  image={`http://localhost:5000${mush.image}`}
+                  rating={mush.rating || 5}
+                  title={mush.name}
+                  paragraph={mush.description}
+                  price={mush.price}
+                  measures={mush.measures && mush.measures.length > 0 ? mush.measures : null}
+                  prices={plainPrices}
+                  renderRatingIcons={renderRatingIcons}
+                  modelUrl={mush.modelUrl}
+                />
+              );
+            })}
+          </Row>
+        )}
       </Container>
     </section>
   );

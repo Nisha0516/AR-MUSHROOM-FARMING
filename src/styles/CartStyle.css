@@ -1,0 +1,218 @@
+/* e:\neww\food-app\src\styles\CartStyle.css */
+
+.cart_section {
+  background-color: #f8f9fa;
+  min-height: 80vh;
+}
+
+.cart_title {
+  font-family: var(--oswald-font);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--light-black);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.cart_title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--light-red);
+}
+
+.cart_table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+  border: none !important;
+}
+
+.cart_table thead th {
+  background-color: var(--light-black);
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  padding: 1.2rem 1rem;
+  border: none;
+}
+
+.cart_table tbody td {
+  vertical-align: middle;
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.cart_table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cart_item_img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cart_item_title {
+  font-weight: 700;
+  color: var(--light-black);
+  margin-bottom: 0.2rem;
+  font-size: 1.1rem;
+}
+
+.cart_item_measure {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.cart_qty_wrapper {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f2f6;
+  border-radius: 30px;
+  padding: 0.2rem 0.5rem;
+}
+
+.cart_qty_btn {
+  background: none;
+  border: none;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--light-black);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.cart_qty_btn:hover {
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cart_qty_input {
+  width: 40px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  padding: 0;
+}
+
+.cart_qty_input:focus {
+  outline: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.cart_qty_input::-webkit-outer-spin-button,
+.cart_qty_input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cart_total_price {
+  font-weight: 700;
+  color: var(--light-red);
+  font-size: 1.1rem;
+}
+
+.cart_summary {
+  background: white;
+  border: none !important;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+  position: sticky;
+  top: 100px;
+}
+
+.summary_title {
+  font-family: var(--oswald-font);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #f1f2f6;
+  padding-bottom: 1rem;
+}
+
+.summary_item {
+  color: #555;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.summary_total {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary_total .total_label {
+  font-family: var(--oswald-font);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--light-black);
+  text-transform: uppercase;
+}
+
+.summary_total .total_amount {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--light-red);
+}
+
+.btn-checkout {
+  background-color: var(--light-red);
+  border: none;
+  padding: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-checkout:hover {
+  background-color: var(--bg-coffee);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-continue {
+  background-color: white;
+  color: var(--light-black);
+  border: 2px solid #eee;
+  padding: 0.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-continue:hover {
+  border-color: var(--yellow);
+  background-color: var(--yellow);
+}
+
+.empty_cart_card {
+  border-top: 4px solid var(--yellow);
+  transition: transform 0.3s ease;
+}
+
+.empty_cart_card:hover {
+  transform: translateY(-5px);
+}

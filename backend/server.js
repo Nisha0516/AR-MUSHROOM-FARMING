@@ -36,6 +36,7 @@ app.use('/api/mushrooms', require('./routes/mushroomRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
+app.use('/api/inquiries', require('./routes/inquiryRoutes'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -55,7 +56,8 @@ app.get('/', (req, res) => {
       health: '/api/health',
       mushrooms: '/api/mushrooms',
       orders: '/api/orders',
-      users: '/api/users'
+      users: '/api/users',
+      inquiries: '/api/inquiries'
     }
   });
 });

@@ -23,7 +23,7 @@ const Blog = () => {
         },
         {
             id: 3,
-            title: "How AR Farming Software Reduces Climate Intuition Errors",
+            title: "How Advanced Farming Software Reduces Climate Intuition Errors",
             date: "October 10, 2024",
             excerpt: "Discover how real-time augmented reality overlays on your farm's climate data can prevent catastrophic crop failures before they happen.",
             image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",

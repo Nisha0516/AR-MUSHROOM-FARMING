@@ -12,7 +12,7 @@ const AdminLayout = ({ children }) => {
             {/* Sidebar */}
             <div className="admin-sidebar shadow-sm">
                 <div className="text-center mb-5 px-3">
-                    <h4 style={{ fontWeight: 800, letterSpacing: '1px' }}>AR MATRIX</h4>
+                    <h4 style={{ fontWeight: 800, letterSpacing: '1px' }}>FARM MATRIX</h4>
                     <p className="small text-muted mb-0 font-weight-bold text-uppercase" style={{ fontSize: '0.65rem', letterSpacing: '1px' }}>Farm Management</p>
                 </div>
 
@@ -28,6 +28,10 @@ const AdminLayout = ({ children }) => {
                     <Link to="/admin/catalog" className={`nav-item-admin ${location.pathname === '/admin/catalog' ? 'active' : ''}`}>
                         <i className="bi bi-box-seam"></i>
                         Product Catalog
+                    </Link>
+                    <Link to="/admin/inquiries" className={`nav-item-admin ${location.pathname === '/admin/inquiries' ? 'active' : ''}`}>
+                        <i className="bi bi-envelope"></i>
+                        Inquiry Inbox
                     </Link>
                     <Link to="/admin/settings" className={`nav-item-admin ${location.pathname === '/admin/settings' ? 'active' : ''}`}>
                         <i className="bi bi-gear"></i>
@@ -61,9 +65,10 @@ const AdminLayout = ({ children }) => {
                         <h3 className="mb-0 font-weight-bold">
                             {location.pathname === '/admin/dashboard' ? 'Operational Overview' :
                                 location.pathname === '/admin/orders' ? 'Order Registry' :
-                                    location.pathname === '/admin/catalog' ? 'Industrial Catalog' : 'Administrative Settings'}
+                                    location.pathname === '/admin/catalog' ? 'Industrial Catalog' : 
+                                    location.pathname === '/admin/inquiries' ? 'Inquiry Inbox' : 'Administrative Settings'}
                         </h3>
-                        <p className="text-stone small mb-0">System Status: Operational • AR Modules: Online</p>
+                        <p className="text-stone small mb-0">System Status: Operational • Modules: Online</p>
                     </div>
                     <div className="d-flex align-items-center">
                         <div className="me-4 px-3 py-1 bg-stone rounded-pill small font-weight-bold text-stone">

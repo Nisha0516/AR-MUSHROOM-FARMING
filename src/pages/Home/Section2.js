@@ -37,7 +37,7 @@ function Section2() {
         <Container>
           <Row>
             <Col lg={{ span: 8, offset: 2 }} className="text-center">
-              <h2 className="text-white">Optimize Your Yields with Next-Gen Agricultural AR</h2>
+              <h2 className="text-white">Optimize Your Yields with Next-Gen Agriculture</h2>
               <p>
                 Advanced Farming Visualization
                 Simulate environments for button mushrooms, oyster mushrooms, shiitake, and more.

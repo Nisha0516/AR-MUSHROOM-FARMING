@@ -24,7 +24,7 @@ const AdminLogin = () => {
                 <Row className="justify-content-center">
                     <Col md={5}>
                         <div className="text-center mb-4">
-                            <h2 className="mb-1" style={{ fontWeight: 700, letterSpacing: '1px', color: 'var(--admin-accent)', fontFamily: 'var(--admin-font-head)' }}>AR MATRIX ADMIN</h2>
+                            <h2 className="mb-1" style={{ fontWeight: 700, letterSpacing: '1px', color: 'var(--admin-accent)', fontFamily: 'var(--admin-font-head)' }}>FARM MATRIX ADMIN</h2>
                             <p className="text-stone small text-uppercase">Industrial Farming Gateway</p>
                         </div>
                         <Card className="admin-card border-0 p-4 shadow-sm" style={{ borderTop: '4px solid var(--admin-accent) !important' }}>
