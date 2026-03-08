@@ -160,10 +160,23 @@ router.put('/:id', async (req, res) => {
       data: user
     });
   } catch (error) {
+    // Provide clearer error messages for common cases
+    let message = error.message || 'Error updating user';
+    // Duplicate key (e.g., email already exists)
+    if (error.code === 11000) {
+      const key = Object.keys(error.keyValue || {})[0] || 'field';
+      message = `${key.charAt(0).toUpperCase() + key.slice(1)} already exists`;
+    }
+    // Mongoose validation errors
+    if (error.name === 'ValidationError') {
+      message = Object.values(error.errors).map((e) => e.message).join('; ');
+    }
+
     res.status(400).json({
       success: false,
-      message: 'Error updating user',
-      error: error.message
+      message,
+      error: error.message,
+      details: error
     });
   }
 });

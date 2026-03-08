@@ -80,7 +80,7 @@ function Footer() {
                 <ul className="list-unstyled text-center mb-0">
                   <li>
                     <Link to="/">
-                      © 2026 <span>mohanaprasad</span>. All Rights Reserved
+                      © 2026 <span>Sri Chendurr Agro Farms</span>. All Rights Reserved
                     </Link>
                   </li>
                   <li>

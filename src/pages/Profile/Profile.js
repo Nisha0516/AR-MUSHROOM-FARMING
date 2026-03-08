@@ -1,11 +1,22 @@
 import React from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useUser } from '../../context/UserContext';
+import { useState } from 'react';
+import { userAPI } from '../../services/api';
 import { Navigate, Link } from 'react-router-dom';
 import Layout from '../../components/Layouts/Layout';
 
 const Profile = () => {
-  const { user, isAuthenticated, loading } = useUser();
+  const { user, isAuthenticated, loading, login, token } = useUser();
+  const [editing, setEditing] = useState(false);
+  const [formState, setFormState] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || ''
+  });
+  const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
   
   if (loading) return null;
   
@@ -65,18 +76,60 @@ const Profile = () => {
                     </div>
                 </Card.Header>
                 <Card.Body className="p-4 bg-white">
-                  <Form>
+                  <Form onSubmit={async (e) => {
+                    e.preventDefault();
+                    setErrorMsg(null);
+                    setSuccessMsg(null);
+                    setSaving(true);
+                    try {
+                      const payload = {
+                        name: formState.name,
+                        email: formState.email,
+                        phone: formState.phone
+                      };
+                      const res = await userAPI.update(user._id, payload);
+                      if (res && res.success) {
+                        // Update context and localStorage
+                        const updatedUser = res.data || { ...user, ...payload };
+                        if (login) login(updatedUser, token);
+                        localStorage.setItem('user', JSON.stringify(updatedUser));
+                        setSuccessMsg('Profile updated successfully.');
+                        setEditing(false);
+                      } else {
+                        setErrorMsg(res.message || 'Failed to update profile.');
+                      }
+                    } catch (err) {
+                      setErrorMsg(err.message || 'Network error.');
+                    } finally {
+                      setSaving(false);
+                    }
+                  }}>
+                    {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
+                    {successMsg && <div className="alert alert-success">{successMsg}</div>}
+
                     <Row className="mb-4">
                       <Col md={6} className="mb-3 mb-md-0">
                         <Form.Group>
                           <Form.Label className="text-muted small fw-bold text-uppercase">Full Name</Form.Label>
-                          <Form.Control type="text" defaultValue={user.name} className="bg-light border-0 py-2 fw-medium" readOnly />
+                          <Form.Control
+                            type="text"
+                            value={formState.name}
+                            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                            className="bg-light border-0 py-2 fw-medium"
+                            readOnly={!editing}
+                          />
                         </Form.Group>
                       </Col>
                       <Col md={6}>
                         <Form.Group>
                           <Form.Label className="text-muted small fw-bold text-uppercase">Email Address</Form.Label>
-                          <Form.Control type="email" defaultValue={user.email} className="bg-light border-0 py-2 fw-medium text-muted" readOnly />
+                          <Form.Control
+                            type="email"
+                            value={formState.email}
+                            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                            className="bg-light border-0 py-2 fw-medium text-muted"
+                            readOnly={!editing}
+                          />
                         </Form.Group>
                       </Col>
                     </Row>
@@ -84,22 +137,42 @@ const Profile = () => {
                       <Col md={6} className="mb-3 mb-md-0">
                         <Form.Group>
                           <Form.Label className="text-muted small fw-bold text-uppercase">Phone Number</Form.Label>
-                          <Form.Control type="text" defaultValue={user.phone || ''} placeholder="Phone Number" className="bg-light border-0 py-2 fw-medium text-muted" readOnly />
+                          <Form.Control
+                            type="text"
+                            value={formState.phone}
+                            onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                            placeholder="Phone Number"
+                            className="bg-light border-0 py-2 fw-medium text-muted"
+                            readOnly={!editing}
+                          />
                         </Form.Group>
                       </Col>
                       <Col md={6}>
                         <Form.Group>
                           <Form.Label className="text-muted small fw-bold text-uppercase">Account Security</Form.Label>
                           <Form.Control type="password" defaultValue="********" className="bg-light border-0 py-2 fw-medium text-muted" readOnly />
-                          <Form.Text className="text-primary fw-bold" style={{ cursor: 'pointer', fontSize: '0.8rem' }}>Request password reset</Form.Text>
+                          <Form.Text className="text-primary fw-bold" style={{ cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => alert('Password reset link sent to your email (demo).')}>Request password reset</Form.Text>
                         </Form.Group>
                       </Col>
                     </Row>
                     <hr className="my-4" />
                     <div className="d-flex justify-content-end">
-                      <Button variant="dark" className="rounded-pill px-5 fw-bold shadow-sm disabled" style={{ cursor: 'not-allowed' }}>
-                        Save Changes
-                      </Button>
+                      {!editing ? (
+                        <>
+                          <Button variant="outline-primary" className="me-2 rounded-pill px-4 fw-bold" onClick={() => setEditing(true)}>Edit</Button>
+                          <Button variant="danger" className="rounded-pill px-4 fw-bold" onClick={() => {
+                            if (window.confirm('Are you sure you want to delete your account? This is irreversible.')) {
+                              // Keep current behavior: placeholder
+                              alert('Account deletion not implemented in demo.');
+                            }
+                          }}>Delete Account</Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button variant="secondary" className="me-2 rounded-pill px-4 fw-bold" onClick={() => { setEditing(false); setFormState({ name: user.name, email: user.email, phone: user.phone || '' }); setErrorMsg(null); setSuccessMsg(null); }}>Cancel</Button>
+                          <Button variant="dark" type="submit" className="rounded-pill px-4 fw-bold" disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</Button>
+                        </>
+                      )}
                     </div>
                   </Form>
                 </Card.Body>

@@ -76,7 +76,7 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
 
             <div className="d-flex align-items-center justify-content-between mt-auto pt-3 border-top">
               <div className="menu_price">
-                <h4 className="mb-0 text-dark fw-bold" style={{ letterSpacing: '-0.5px' }}>₨{currentPrice}</h4>
+                <h4 className="mb-0 text-dark fw-bold" style={{ letterSpacing: '-0.5px' }}>₨ {currentPrice}/-</h4>
               </div>
               <div className="item_rating text-warning" style={{ fontSize: '0.9rem' }}>
                 {renderRatingIcons(rating)}

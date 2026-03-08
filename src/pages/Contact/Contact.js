@@ -87,7 +87,7 @@ const Contact = () => {
                   <Card className="border-0 shadow-sm text-center h-100 py-4">
                     <Card.Body>
                       <FaMapMarkerAlt size={40} className="mb-3" style={{ color: 'var(--light-red)' }} />
-                      <h5 className="font-weight-bold">Farm Headquarters</h5>
+                      <h5 className="font-weight-bold">Sri Chenndur farms</h5>
                       <p className="text-muted mb-0">123 Agriculture Tech Park<br />Innovation District, NY 10001</p>
                     </Card.Body>
                   </Card>
@@ -97,7 +97,7 @@ const Contact = () => {
                     <Card.Body>
                       <FaPhoneAlt size={40} className="mb-3" style={{ color: 'var(--yellow)' }} />
                       <h5 className="font-weight-bold">Phone Inquiry</h5>
-                      <p className="text-muted mb-0">+1 (555) 123-4567<br />Mon-Fri 9am - 6pm EST</p>
+                      <p className="text-muted mb-0">+91 9876543212<br />Mon-Fri 9am - 6pm EST</p>
                     </Card.Body>
                   </Card>
                 </Col>

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
 import { useUser } from "../../context/UserContext";
+import { CartContext } from "../../context/CartContext";
 import "../../styles/HeaderStyle.css";
 
 const Header = () => {
   const { user, logout } = useUser();
+  const { cartItems } = useContext(CartContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -61,7 +63,9 @@ const Header = () => {
               <Nav.Link as={Link} to="/cart">
                 <div className="cart">
                   <i className="bi bi-bag fs-5"></i>
-                  <em className="roundpoint">2</em>
+                  {cartItems && cartItems.length > 0 && (
+                    <em className="roundpoint">{cartItems.reduce((s, it) => s + (it.quantity || 0), 0)}</em>
+                  )}
                 </div>
               </Nav.Link>
             </Nav>

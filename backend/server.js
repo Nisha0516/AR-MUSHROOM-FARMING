@@ -10,7 +10,23 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// Configure CORS to explicitly allow the frontend origin(s).
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000').split(',');
+console.log('Allowed CORS origins:', allowedOrigins);
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like curl, Postman, mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy: Origin not allowed'));
+  },
+  credentials: true,
+}));
+// respond to preflight requests
+app.options('*', cors());
+
 app.use(express.json());
 
 // MongoDB Connection

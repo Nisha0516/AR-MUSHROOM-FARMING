@@ -13,10 +13,28 @@ const apiCall = async (endpoint, options = {}) => {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Try to parse JSON error body for a helpful message
+      let errorBody = null;
+      try {
+        errorBody = await response.json();
+      } catch (e) {
+        // ignore JSON parse errors
+      }
+      const serverMessage = errorBody && (errorBody.message || errorBody.error || JSON.stringify(errorBody));
+      const err = new Error(serverMessage || `HTTP error! status: ${response.status}`);
+      err.status = response.status;
+      err.body = errorBody;
+      throw err;
     }
 
-    return await response.json();
+    // Parse successful response (may still be empty)
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      // If response is not JSON, return raw text
+      return text;
+    }
   } catch (error) {
     console.error('API Error:', error);
     throw error;
@@ -73,6 +91,17 @@ export const orderAPI = {
   updateStatus: (id, status) => apiCall(`/orders/${id}/status`, {
     method: 'PUT',
     body: JSON.stringify({ status }),
+  }),
+  // Create a Razorpay order (backend will initialize Razorpay order)
+  createRazorpayOrder: (data) => apiCall('/orders/create-razorpay-order', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+
+  // Verify Razorpay payment signature
+  verifyRazorpayPayment: (data) => apiCall('/orders/verify-payment', {
+    method: 'POST',
+    body: JSON.stringify(data),
   }),
 };
 
