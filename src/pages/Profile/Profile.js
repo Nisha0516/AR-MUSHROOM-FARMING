@@ -7,7 +7,7 @@ import { Navigate, Link, useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layouts/Layout';
 
 const Profile = () => {
-  const { user, isAuthenticated, loading, login, logout, token, userId } = useUser();
+  const { user, isAuthenticated, login, logout, token, userId } = useUser();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [formState, setFormState] = useState({

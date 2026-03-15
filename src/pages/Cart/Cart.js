@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Container, Row, Col, Table, Button, Modal } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import Layout from "../../components/Layouts/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";

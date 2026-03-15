@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layouts/Layout";
 import { CartContext } from "../../context/CartContext";
 import { useUser } from "../../context/UserContext";
-import { userAPI, orderAPI } from "../../services/api";
+import { orderAPI } from "../../services/api";
 import { FaCreditCard, FaFileContract } from "react-icons/fa";
 import "../../styles/CheckoutStyle.css";
 

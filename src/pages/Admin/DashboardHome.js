@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Table, ProgressBar, Spinner, Alert } from "react-bootstrap";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import AdminLayout from "./AdminLayout";
 import { orderAPI } from "../../services/api";
 import "../../styles/AdminStyle.css";
