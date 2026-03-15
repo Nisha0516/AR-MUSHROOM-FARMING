@@ -13,17 +13,13 @@ const app = express();
 // Configure CORS to explicitly allow the frontend origin(s).
 const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000').split(',');
 console.log('Allowed CORS origins:', allowedOrigins);
+
+
 app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like curl, Postman, mobile apps)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    }
-    return callback(new Error('CORS policy: Origin not allowed'));
-  },
-  credentials: true,
+  origin: "*",
+  credentials: true
 }));
+
 // respond to preflight requests
 app.options('*', cors());
 
@@ -45,10 +41,21 @@ mongoose.connect(MONGODB_URI, {
 
 // Serve static uploads folder
 const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res, filePath) => {
+    // Help browsers/AR viewers understand 3D assets.
+    if (typeof filePath === 'string' && filePath.toLowerCase().endsWith('.glb')) {
+      res.setHeader('Content-Type', 'model/gltf-binary');
+    }
+    if (typeof filePath === 'string' && filePath.toLowerCase().endsWith('.gltf')) {
+      res.setHeader('Content-Type', 'model/gltf+json');
+    }
+  }
+}));
 
 // Routes
 app.use('/api/mushrooms', require('./routes/mushroomRoutes'));
+app.use('/api/ar', require('./routes/arRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
@@ -71,6 +78,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/api/health',
       mushrooms: '/api/mushrooms',
+      ar: '/api/ar',
       orders: '/api/orders',
       users: '/api/users',
       inquiries: '/api/inquiries'

@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Large AR / 3D assets and runtime uploads (keep out of git; store via DB/CDN/LFS instead)
+/backend/uploads/
+*.glb
+*.gltf
+*.bin
+*.usdz

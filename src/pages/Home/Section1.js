@@ -29,9 +29,14 @@ const Section1 = () => {
               <p className="text-white pb-4">
                 From beginner grow kits to bulk sterilized spawn for commercial farms.
               </p>
-              <Link to="/shop" className="btn order_now">
-                Order Now
-              </Link>
+              <div className="d-flex justify-content-center gap-3">
+                <Link to="/shop" className="btn order_now">
+                  Order Now
+                </Link>
+                <Link to="/scan-mushroom" className="btn order_now bg-success border-success">
+                  Scan & Grow AR
+                </Link>
+              </div>
             </div>
           </Col>
         </Row>

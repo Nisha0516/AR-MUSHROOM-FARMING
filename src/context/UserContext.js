@@ -47,7 +47,9 @@ export const UserProvider = ({ children }) => {
         login,
         logout,
         isAuthenticated: !!user,
-        loading
+        loading,
+        // Safe getter — handles both old sessions (id) and new sessions (_id)
+        userId: user ? (user._id || user.id || null) : null,
     };
 
     return (

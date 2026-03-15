@@ -138,7 +138,25 @@ const Orders = () => {
                               <p className="mb-0 fw-bold text-primary font-monospace">{orderNumber}</p>
                             </Col>
                             <Col md={4} xs={6} className="text-md-end text-start">
-                              <div className="d-flex flex-column align-items-md-end align-items-start h-100 justify-content-center">
+                              <div className="d-flex flex-column align-items-md-end align-items-start h-100 justify-content-center w-100">
+                                <div className="w-100 mb-2 mt-1 px-md-3" style={{ maxWidth: '200px' }}>
+                                  <div className="d-flex justify-content-between small text-muted mb-1" style={{ fontSize: '0.65rem' }}>
+                                    <span>Track Order</span>
+                                    <span>{order.status}</span>
+                                  </div>
+                                  <div className="progress" style={{ height: '6px', backgroundColor: '#e9ecef', borderRadius: '10px' }}>
+                                    <div 
+                                      className={`progress-bar progress-bar-striped progress-bar-animated ${order.status === 'Delivered' ? 'bg-success' : order.status === 'Cancelled' ? 'bg-danger' : 'bg-primary'}`}
+                                      role="progressbar" 
+                                      style={{ 
+                                        width: order.status === 'Processing' ? '40%' : 
+                                               order.status === 'Shipped' ? '75%' : 
+                                               order.status === 'Delivered' ? '100%' : 
+                                               order.status === 'Cancelled' ? '100%' : '15%' 
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
                                 {getStatusBadge(order.status)}
                                 <Button 
                                   variant="link" 
@@ -159,7 +177,7 @@ const Orders = () => {
                                 {(order.items || []).slice(0, 4).map((item, idx) => (
                                   <div key={idx} className="position-relative">
                                     <Image 
-                                      src={item.mushroom && item.mushroom.image ? `http://localhost:5000${item.mushroom.image}` : '/assets/mock/placeholder.jpg'} 
+                                      src={item.mushroom && item.mushroom.image ? item.mushroom.image : '/uploads/mush-11.jpg'} 
                                       alt="Product product"
                                       width={80} 
                                       height={80} 
@@ -192,7 +210,7 @@ const Orders = () => {
                                 <Row key={idx} className="align-items-center bg-white p-3 rounded-3 shadow-sm mx-0">
                                   <Col xs={3} sm={2} className="text-center px-0">
                                      <Image 
-                                      src={item.mushroom && item.mushroom.image ? `http://localhost:5000${item.mushroom.image}` : '/assets/mock/placeholder.jpg'} 
+                                      src={item.mushroom && item.mushroom.image ? item.mushroom.image : '/uploads/mush-11.jpg'} 
                                       alt="Product"
                                       width={60} 
                                       height={60} 

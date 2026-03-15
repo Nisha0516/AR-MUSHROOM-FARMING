@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Alert, Button } from "react-bootstrap";
 import Cards from "../../components/Layouts/Cards";
 import { mushroomAPI } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 // Rating Logical Data
 const renderRatingIcons = (rating) => {
@@ -22,6 +23,7 @@ const renderRatingIcons = (rating) => {
 };
 
 function Section3() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,6 +57,16 @@ function Section3() {
             <p className="para">
               High-yield spawn, sterilized substrates, and complete grow kits.
             </p>
+            <div className="d-flex justify-content-center mt-4">
+              <Button
+                variant="dark"
+                className="rounded-pill fw-bold shadow-sm px-4 py-2"
+                onClick={() => navigate("/scan-mushroom")}
+              >
+                <i className="bi bi-camera me-2"></i>
+                Scan Mushroom
+              </Button>
+            </div>
           </Col>
         </Row>
 
@@ -81,7 +93,7 @@ function Section3() {
                   key={mush._id}
                   id={mush._id}
                   type={mush.type}
-                  image={`http://localhost:5000${mush.image}`}
+                  image={mush.image || "/uploads/mush-11.jpg"}
                   rating={mush.rating || 5}
                   title={mush.name}
                   paragraph={mush.description}

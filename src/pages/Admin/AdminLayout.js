@@ -33,6 +33,18 @@ const AdminLayout = ({ children }) => {
                         <i className="bi bi-envelope"></i>
                         Inquiry Inbox
                     </Link>
+                    <Link to="/admin/ar-analytics" className={`nav-item-admin ${location.pathname === '/admin/ar-analytics' ? 'active' : ''}`}>
+                        <i className="bi bi-graph-up"></i>
+                        AR Analytics
+                    </Link>
+                    <Link to="/admin/ar-markers" className={`nav-item-admin ${location.pathname === '/admin/ar-markers' ? 'active' : ''}`}>
+                        <i className="bi bi-tags"></i>
+                        AR Markers
+                    </Link>
+                    <Link to="/admin/ar-scans" className={`nav-item-admin ${location.pathname === '/admin/ar-scans' ? 'active' : ''}`}>
+                        <i className="bi bi-qr-code-scan"></i>
+                        AR Scans
+                    </Link>
                     <Link to="/admin/settings" className={`nav-item-admin ${location.pathname === '/admin/settings' ? 'active' : ''}`}>
                         <i className="bi bi-gear"></i>
                         Settings
@@ -66,7 +78,10 @@ const AdminLayout = ({ children }) => {
                             {location.pathname === '/admin/dashboard' ? 'Operational Overview' :
                                 location.pathname === '/admin/orders' ? 'Order Registry' :
                                     location.pathname === '/admin/catalog' ? 'Industrial Catalog' : 
-                                    location.pathname === '/admin/inquiries' ? 'Inquiry Inbox' : 'Administrative Settings'}
+                                    location.pathname === '/admin/inquiries' ? 'Inquiry Inbox' :
+                                        location.pathname === '/admin/ar-analytics' ? 'AR Analytics' :
+                                            location.pathname === '/admin/ar-markers' ? 'AR Marker Catalog' :
+                                        location.pathname === '/admin/ar-scans' ? 'AR Scan Registry' : 'Administrative Settings'}
                         </h3>
                         <p className="text-stone small mb-0">System Status: Operational • Modules: Online</p>
                     </div>

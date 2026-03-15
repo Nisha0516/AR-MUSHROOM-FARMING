@@ -12,6 +12,11 @@ const mushroomSchema = new mongoose.Schema({
     required: [true, 'Description is required'],
     maxlength: [500, 'Description cannot be more than 500 characters']
   },
+  // Optional: shown in /scan-product AR card as "Uses"
+  uses: {
+    type: [String],
+    default: []
+  },
   price: {
     type: Number,
     required: [true, 'Price is required'],

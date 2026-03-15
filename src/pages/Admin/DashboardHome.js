@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Table, ProgressBar, Spinner, Alert } from "react-bootstrap";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import AdminLayout from "./AdminLayout";
 import { orderAPI } from "../../services/api";
 import "../../styles/AdminStyle.css";
@@ -41,6 +42,13 @@ const DashboardHome = () => {
 
         fetchDashboardData();
     }, []);
+
+    const chartData = [
+        { name: 'Week 1', revenue: stats.revenue * 0.1 },
+        { name: 'Week 2', revenue: stats.revenue * 0.2 },
+        { name: 'Week 3', revenue: stats.revenue * 0.3 },
+        { name: 'Week 4', revenue: stats.revenue * 0.4 },
+    ];
 
     return (
         <AdminLayout>
@@ -97,6 +105,23 @@ const DashboardHome = () => {
 
             <Row>
                 <Col lg={8}>
+                    <Card className="border-0 shadow-sm mb-4" style={{ borderRadius: '12px' }}>
+                        <Card.Header className="bg-white border-0 pt-4 px-4 pb-0">
+                            <h5 className="font-weight-bold">Revenue Growth (Monthly)</h5>
+                        </Card.Header>
+                        <Card.Body className="p-4" style={{ height: '300px' }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={chartData}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                                    <Tooltip cursor={{ fill: '#f8f9fa' }} />
+                                    <Bar dataKey="revenue" fill="var(--admin-accent)" radius={[4, 4, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </Card.Body>
+                    </Card>
+
                     <Card className="border-0 shadow-sm mb-4" style={{ borderRadius: '12px' }}>
                         <Card.Header className="bg-white border-0 pt-4 px-4 pb-0">
                             <h5 className="font-weight-bold">Recent Procurement Activity</h5>

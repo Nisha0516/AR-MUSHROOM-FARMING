@@ -4,9 +4,11 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 // Helper function for API calls
 const apiCall = async (endpoint, options = {}) => {
   try {
+    const token = localStorage.getItem('token');
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : '',
         ...options.headers,
       },
       ...options,
@@ -67,6 +69,18 @@ export const mushroomAPI = {
   // Delete mushroom (admin only)
   delete: (id) => apiCall(`/mushrooms/${id}`, {
     method: 'DELETE',
+  }),
+
+  // Add review
+  addReview: (id, reviewData) => apiCall(`/mushrooms/${id}/reviews`, {
+    method: 'POST',
+    body: JSON.stringify(reviewData),
+  }),
+
+  // Normalize product details (admin helper)
+  normalize: ({ force = false } = {}) => apiCall('/mushrooms/normalize', {
+    method: 'POST',
+    body: JSON.stringify({ force }),
   }),
 };
 
@@ -130,6 +144,25 @@ export const userAPI = {
     method: 'PUT',
     body: JSON.stringify(userData),
   }),
+
+  // Delete user account
+  delete: (id) => apiCall(`/users/${id}`, {
+    method: 'DELETE',
+  }),
+
+  // Change password
+  changePassword: (id, currentPassword, newPassword) => apiCall(`/users/${id}/change-password`, {
+    method: 'POST',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  }),
+
+  // Toggle Wishlist
+  toggleWishlist: (productId) => apiCall(`/users/wishlist/${productId}`, {
+    method: 'POST',
+  }),
+
+  // Get Wishlist items
+  getWishlist: () => apiCall('/users/wishlist/items'),
 };
 
 // Inquiry API calls
@@ -148,6 +181,47 @@ export const inquiryAPI = {
     method: 'PUT',
     body: JSON.stringify({ status }),
   }),
+};
+
+// AR Mushroom (marker scanning) API calls
+export const arAPI = {
+  // Get all AR mushrooms (marker catalog)
+  getAllMushrooms: () => apiCall('/ar/mushrooms'),
+
+  // Get a single AR mushroom by markerKey
+  getMushroomByMarkerKey: (markerKey) => apiCall(`/ar/mushrooms/${encodeURIComponent(markerKey)}`),
+
+  // Get recent scans (debug)
+  getRecentScans: ({ limit = 20, days = 0 } = {}) =>
+    apiCall(`/ar/scans?limit=${encodeURIComponent(limit)}&days=${encodeURIComponent(days)}`),
+
+  // Analytics (admin)
+  getAnalytics: (days = 30) => apiCall(`/ar/analytics?days=${encodeURIComponent(days)}`),
+
+  // Marker CRUD (admin)
+  createMushroom: (payload) =>
+    apiCall('/ar/mushrooms', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  updateMushroom: (markerKey, payload) =>
+    apiCall(`/ar/mushrooms/${encodeURIComponent(markerKey)}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  deleteMushroom: (markerKey) =>
+    apiCall(`/ar/mushrooms/${encodeURIComponent(markerKey)}`, {
+      method: 'DELETE',
+    }),
+
+  // Store a scan and get randomized nutrients back (server-side)
+  scan: ({ markerKey, confidencePct = null, source = 'marker', rawValue = null } = {}) =>
+    apiCall('/ar/scan', {
+      method: 'POST',
+      body: JSON.stringify({ markerKey, confidencePct, source, rawValue }),
+    }),
 };
 
 // Health check

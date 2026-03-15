@@ -10,14 +10,18 @@ import "../../styles/CheckoutStyle.css";
 
 const Checkout = () => {
   const { cartItems, clearCart } = useContext(CartContext);
-  const { user } = useUser();
+  const { user, userId } = useUser();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: user ? user.name.split(' ')[0] : "",
     lastName: user ? user.name.split(' ')[1] || "" : "",
     email: user ? user.email : "",
-    address: ""
+    address: user?.address?.street || "",
+    city: user?.address?.city || "",
+    state: user?.address?.state || "",
+    zipCode: user?.address?.zipCode || "",
+    country: user?.address?.country || "India"
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -38,17 +42,10 @@ const Checkout = () => {
     setError(null);
 
     try {
-      // 1. Get User ID
-      let currentUserId;
-      if (user && user._id) {
-        currentUserId = user._id;
-      } else {
-        const usersRes = await userAPI.getAll();
-        if (!usersRes.success || usersRes.data.length === 0) {
-          throw new Error("Unable to identify account. Database may not be seeded.");
-        }
-        const guestUser = usersRes.data.find(u => u.email === 'guest@ar-matrix.com') || usersRes.data[0];
-        currentUserId = guestUser._id;
+      // 1. Get User ID from context (safe for both old and new session formats)
+      const currentUserId = userId;
+      if (!currentUserId) {
+        throw new Error("Please log in to complete your purchase.");
       }
 
       // 2. Format cart items
@@ -82,10 +79,10 @@ const Checkout = () => {
             totalAmount: total,
             shippingAddress: {
               street: formData.address,
-              city: "Default City",
-              state: "Default State",
-              zipCode: "00000",
-              country: "Default Country"
+              city: formData.city,
+              state: formData.state,
+              zipCode: formData.zipCode,
+              country: formData.country
             },
             status: "Processing",
             paymentStatus: "Completed"
@@ -131,10 +128,10 @@ const Checkout = () => {
                 totalAmount: total,
                 shippingAddress: {
                   street: formData.address,
-                  city: "Default City",
-                  state: "Default State",
-                  zipCode: "00000",
-                  country: "Default Country"
+                  city: formData.city,
+                  state: formData.state,
+                  zipCode: formData.zipCode,
+                  country: formData.country
                 },
                 status: "Processing",
                 paymentStatus: "Completed"
@@ -163,7 +160,7 @@ const Checkout = () => {
         prefill: {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
-          contact: "9999999999"
+          contact: user?.phone || "9999999999"
         },
         theme: {
           color: "#051114" // Matches dark theme of application
@@ -237,10 +234,40 @@ const Checkout = () => {
                     <Form.Control type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" required />
                   </Form.Group>
 
-                  <Form.Group className="mb-4">
-                    <Form.Label>Full Delivery Address</Form.Label>
-                    <Form.Control as="textarea" rows={3} name="address" value={formData.address} onChange={handleInputChange} placeholder="Enter your full street address, apartment, city, and pincode..." required />
+                  <Form.Group className="mb-3">
+                    <Form.Label>Street / Flat Address</Form.Label>
+                    <Form.Control as="textarea" rows={2} name="address" value={formData.address} onChange={handleInputChange} placeholder="e.g. Flat 12, Gandhi Nagar, MG Road" required />
                   </Form.Group>
+
+                  <Row>
+                    <Col md={6} className="mb-3">
+                      <Form.Group>
+                        <Form.Label>City</Form.Label>
+                        <Form.Control type="text" name="city" value={formData.city} onChange={handleInputChange} placeholder="e.g. Mumbai" required />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6} className="mb-3">
+                      <Form.Group>
+                        <Form.Label>State</Form.Label>
+                        <Form.Control type="text" name="state" value={formData.state} onChange={handleInputChange} placeholder="e.g. Maharashtra" required />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col md={6} className="mb-4">
+                      <Form.Group>
+                        <Form.Label>ZIP / Postal Code</Form.Label>
+                        <Form.Control type="text" name="zipCode" value={formData.zipCode} onChange={handleInputChange} placeholder="e.g. 400001" required />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6} className="mb-4">
+                      <Form.Group>
+                        <Form.Label>Country</Form.Label>
+                        <Form.Control type="text" name="country" value={formData.country} onChange={handleInputChange} placeholder="e.g. India" required />
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
                   <h4 className="mt-4">Payment Selection</h4>
                   <div className="payment_method mb-4">

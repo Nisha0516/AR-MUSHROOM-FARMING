@@ -1,14 +1,45 @@
 import React, { useContext, useState } from "react";
-import { Col, Card, Button, Modal, Row, Form } from "react-bootstrap";
+import { Col, Card, Button, Modal, Row, Form, Spinner } from "react-bootstrap";
 import { CartContext } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { userAPI, mushroomAPI } from "../../services/api";
+import ProductReviews from "../Shop/ProductReviews";
 
-function Cards({ id, type, image, rating, title, paragraph, price, measures, prices, renderRatingIcons, modelUrl }) {
+function Cards({ id, type, image, rating, title, paragraph, price, measures, prices, renderRatingIcons, modelUrl, iosModelUrl }) {
   const { addToCart } = useContext(CartContext);
   const [showProcess, setShowProcess] = useState(false);
   const [isFav, setIsFav] = useState(false);
   const [selectedMeasure, setSelectedMeasure] = useState(measures && measures.length > 0 ? measures[0] : null);
+  const [showReviews, setShowReviews] = useState(false);
+  const [currentMushroom, setCurrentMushroom] = useState(null);
+  const [loadingReviews, setLoadingReviews] = useState(false);
   const navigate = useNavigate();
+
+  const handleToggleWishlist = async () => {
+    try {
+      const res = await userAPI.toggleWishlist(id);
+      if (res.success) {
+        setIsFav(!isFav);
+      }
+    } catch (err) {
+      alert("Please login to manage your wishlist.");
+    }
+  };
+
+  const handleOpenReviews = async () => {
+    setShowReviews(true);
+    setLoadingReviews(true);
+    try {
+      const res = await mushroomAPI.getById(id);
+      if (res.success) {
+        setCurrentMushroom(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to load reviews");
+    } finally {
+      setLoadingReviews(false);
+    }
+  };
 
   const currentPrice = selectedMeasure && prices && prices[selectedMeasure] ? prices[selectedMeasure] : price;
 
@@ -24,6 +55,8 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
     setShowProcess(true);
   };
 
+  const hasArModel = !!(modelUrl || iosModelUrl);
+
   return (
     <>
       <Col sm={6} lg={4} xl={3} className="mb-4">
@@ -38,8 +71,8 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
           <Card.Body className="d-flex flex-column">
             <div className="d-flex align-items-start justify-content-between mb-2">
               <Card.Title className="mb-0 card-title fw-bold text-dark" style={{ fontSize: '1.1rem' }}>{title}</Card.Title>
-              <div className="wishlist ms-2" onClick={() => setIsFav(!isFav)} style={{ cursor: 'pointer' }}>
-                <i className={`bi ${isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'}`}></i>
+              <div className="wishlist ms-2" onClick={handleToggleWishlist} style={{ cursor: 'pointer' }}>
+                <i className={`bi ${isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'}`} style={{ fontSize: '1.2rem' }}></i>
               </div>
             </div>
 
@@ -94,10 +127,54 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
                   Add to Cart
                 </Button>
               </Col>
+              {hasArModel && (
+                <Col xs={12}>
+                  <Button
+                    variant="outline-dark"
+                    size="sm"
+                    className="w-100 rounded-pill"
+                    onClick={() => navigate(`/ar-space/product/${id}`)}
+                  >
+                    <i className="bi bi-bounding-box-circles me-2"></i>
+                    View in Your Space
+                  </Button>
+                </Col>
+              )}
+              <Col xs={12}>
+                <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  className="w-100 rounded-pill border-0 text-muted"
+                  onClick={handleOpenReviews}
+                >
+                  <i className="bi bi-chat-text me-2"></i>
+                  View Reviews
+                </Button>
+              </Col>
             </Row>
           </Card.Body>
         </Card>
       </Col>
+
+      {/* Reviews Modal */}
+      <Modal show={showReviews} onHide={() => setShowReviews(false)} centered size="lg" className="reviews-modal">
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="fw-bold">{title} Reviews</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4 pt-0" style={{ backgroundColor: '#111', borderRadius: '0 0 12px 12px' }}>
+          {loadingReviews ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" variant="warning" />
+            </div>
+          ) : (
+            <ProductReviews 
+              mushroomId={id} 
+              initialReviews={currentMushroom?.reviews || []}
+              onReviewAdded={handleOpenReviews} 
+            />
+          )}
+        </Modal.Body>
+      </Modal>
 
       {/* Continue Process Modal */}
       <Modal show={showProcess} onHide={() => setShowProcess(false)} centered>

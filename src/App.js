@@ -12,6 +12,15 @@ import Checkout from "./pages/Checkout/Checkout";
 import Blog from "./pages/Blog/Blog";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Profile/Orders";
+import SavedAddresses from "./pages/Profile/SavedAddresses";
+import PaymentMethods from "./pages/Profile/PaymentMethods";
+import ScanGrow from "./pages/AR/ScanGrow";
+import MushroomMarkers from "./pages/AR/MushroomMarkers";
+import ScanProduct from "./pages/AR/ScanProduct";
+import ProductDetails from "./pages/Shop/ProductDetails";
+import ProductMarkers from "./pages/AR/ProductMarkers";
+import ARSpaceProduct from "./pages/AR/ARSpaceProduct";
+import ARSpaceMushroom from "./pages/AR/ARSpaceMushroom";
 
 import { UserProvider } from "./context/UserContext";
 import { AdminAuthProvider, AdminGuard } from "./context/AdminAuthContext";
@@ -21,6 +30,9 @@ import OrderRegistry from "./pages/Admin/OrderRegistry";
 import ProductCatalog from "./pages/Admin/ProductCatalog";
 import AdminSettings from "./pages/Admin/AdminSettings";
 import InquiryRegistry from "./pages/Admin/InquiryRegistry";
+import ARScanRegistry from "./pages/Admin/ARScanRegistry";
+import ARAnalytics from "./pages/Admin/ARAnalytics";
+import ARMarkerCatalog from "./pages/Admin/ARMarkerCatalog";
 
 function App() {
   return (
@@ -45,6 +57,15 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/saved-addresses" element={<SavedAddresses />} />
+            <Route path="/payment-methods" element={<PaymentMethods />} />
+            <Route path="/scan-mushroom" element={<ScanGrow />} />
+            <Route path="/scan-product" element={<ScanProduct />} />
+            <Route path="/mushroom-markers" element={<MushroomMarkers />} />
+            <Route path="/product-markers" element={<ProductMarkers />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/ar-space/product/:id" element={<ARSpaceProduct />} />
+            <Route path="/ar-space/mushroom/:markerKey" element={<ARSpaceMushroom />} />
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -52,6 +73,9 @@ function App() {
             <Route path="/admin/orders" element={<AdminGuard><OrderRegistry /></AdminGuard>} />
             <Route path="/admin/catalog" element={<AdminGuard><ProductCatalog /></AdminGuard>} />
             <Route path="/admin/inquiries" element={<AdminGuard><InquiryRegistry /></AdminGuard>} />
+            <Route path="/admin/ar-analytics" element={<AdminGuard><ARAnalytics /></AdminGuard>} />
+            <Route path="/admin/ar-markers" element={<AdminGuard><ARMarkerCatalog /></AdminGuard>} />
+            <Route path="/admin/ar-scans" element={<AdminGuard><ARScanRegistry /></AdminGuard>} />
             <Route path="/admin/settings" element={<AdminGuard><AdminSettings /></AdminGuard>} />
           </Routes>
         </UserProvider>

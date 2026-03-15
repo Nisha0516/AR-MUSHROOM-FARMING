@@ -1,0 +1,662 @@
+.ar-page-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.ar-camera {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(1.05) contrast(1.02);
+}
+
+.ar-hidden-canvas {
+    display: none;
+}
+
+.ar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    color: white;
+}
+
+.back-btn {
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.scan-instructions {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.scan-frame {
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    margin: 0 auto 20px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+.scan-frame::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #00ff88;
+    box-shadow: 0 0 10px #00ff88;
+    opacity: 0;
+}
+
+.scan-frame--scanning::after {
+    opacity: 1;
+    animation: scanMove 2s infinite ease-in-out;
+}
+
+.scan-frame--found {
+    border-color: rgba(0, 255, 136, 0.9);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.35);
+}
+
+.ar-marker {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 140px);
+    transform: translateX(-50%);
+    width: 150px;
+    height: 110px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset, 0 18px 60px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(2px);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.ar-marker::before,
+.ar-marker::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 14px;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+}
+
+.ar-marker--scanning {
+    border-color: rgba(0, 255, 136, 0.35);
+}
+
+.ar-marker--found {
+    border-color: rgba(0, 255, 136, 0.85);
+    box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.25) inset, 0 18px 70px rgba(0, 255, 136, 0.12);
+}
+
+.ar-qr-anchor {
+    position: absolute;
+    z-index: 9;
+    pointer-events: auto;
+}
+
+.ar-qr-anchor__box {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset, 0 20px 70px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(1px);
+    opacity: 0.95;
+}
+
+.ar-qr-anchor__box--found {
+    border-color: rgba(0, 255, 136, 0.85);
+    box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.20) inset, 0 22px 80px rgba(0, 255, 136, 0.10);
+}
+
+.ar-qr-anchor__label {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 60px rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 900;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+}
+
+.ar-qr-anchor__model {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -92%);
+    pointer-events: auto;
+    background: transparent;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 22px 90px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+}
+
+@keyframes scanMove {
+    0% { top: 10% }
+    50% { top: 90% }
+    100% { top: 10% }
+}
+
+.ar-title {
+    font-size: 1.35rem;
+    letter-spacing: -0.2px;
+    margin: 0 0 6px;
+}
+
+.ar-subtitle {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+}
+
+.scan-status {
+    margin: 14px auto 0;
+    width: fit-content;
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    font-size: 0.9rem;
+}
+
+.ar-controls {
+    pointer-events: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 20px;
+}
+
+.scan-topbar {
+    pointer-events: auto;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+}
+
+.ar-detected-pill {
+    pointer-events: none;
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 60px rgba(0, 0, 0, 0.5);
+    animation: arPillIn 200ms ease-out;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.ar-detected-pill__label {
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 700;
+}
+
+.ar-detected-pill__name {
+    font-weight: 900;
+    letter-spacing: -0.2px;
+}
+
+@keyframes arPillIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.scan-topbar__scanbtn {
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.scan-topbar__scanbtn:hover:enabled {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.scan-topbar__scanbtn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.info-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ar-link-btn {
+    text-decoration: none;
+}
+
+.info-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ar-primary-scan-btn {
+    background: rgba(0, 255, 136, 0.14);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    color: #eafff5;
+    padding: 10px 18px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.ar-primary-scan-btn:hover:enabled {
+    background: rgba(0, 255, 136, 0.22);
+}
+
+.ar-primary-scan-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.ar-marker-cards {
+    pointer-events: auto;
+    position: absolute;
+    left: 50%;
+    bottom: 92px;
+    transform: translateX(-50%);
+    width: min(860px, calc(100% - 32px));
+    max-height: 44vh;
+    overflow: auto;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.38);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+    padding: 14px;
+}
+
+.ar-marker-cards__title {
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.ar-marker-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.ar-marker-card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.ar-marker-card__img {
+    height: 84px;
+    background-size: cover;
+    background-position: center;
+    filter: saturate(1.05) contrast(1.02);
+}
+
+.ar-marker-card__body {
+    padding: 10px 12px 12px;
+}
+
+.ar-marker-card__name {
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: #fff;
+    font-size: 0.98rem;
+}
+
+.ar-marker-card__meta {
+    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.85rem;
+}
+
+.ar-marker-card__qr {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.ar-marker-card__qr img {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    background: #fff;
+    padding: 6px;
+}
+
+.ar-marker-card__qr-fallback {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.85rem;
+    word-break: break-word;
+    text-align: center;
+}
+
+.ar-info-card {
+    pointer-events: auto;
+    position: absolute;
+    left: 50%;
+    bottom: 92px;
+    transform: translateX(-50%);
+    width: min(560px, calc(100% - 32px));
+    background: linear-gradient(180deg, rgba(25, 25, 28, 0.6), rgba(10, 10, 12, 0.55));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    padding: 16px 16px 14px;
+    animation: arCardIn 260ms ease-out;
+}
+
+@keyframes arCardIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.ar-info-card__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.ar-info-card__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+}
+
+.ar-icon {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    color: rgba(0, 255, 136, 0.95);
+}
+
+.ar-info-card__confidence {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.ar-info-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.ar-info-card__notice {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.92rem;
+}
+
+.ar-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+}
+
+.ar-pill--safe {
+    background: rgba(0, 255, 136, 0.10);
+    border-color: rgba(0, 255, 136, 0.25);
+    color: rgba(230, 255, 245, 0.98);
+}
+
+.ar-pill--danger {
+    background: rgba(255, 73, 73, 0.12);
+    border-color: rgba(255, 73, 73, 0.28);
+    color: rgba(255, 235, 235, 0.98);
+}
+
+.ar-info-card__section-title {
+    margin-top: 12px;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ar-nutrients {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.ar-nutrient {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.ar-nutrient i {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.ar-nutrient span {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.9rem;
+}
+
+.ar-nutrient strong {
+    color: #fff;
+    font-weight: 800;
+}
+
+.ar-info-card__actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.ar-scan-again-btn {
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+}
+
+.ar-scan-again-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.ar-scan-again-btn--secondary {
+    background: rgba(0, 255, 136, 0.10);
+    border-color: rgba(0, 255, 136, 0.22);
+}
+
+.ar-scan-again-btn--secondary:hover {
+    background: rgba(0, 255, 136, 0.16);
+}
+
+.ar-benefits {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.ar-benefit {
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    font-size: 0.92rem;
+}
+
+.ar-model {
+    margin-top: 6px;
+}
+
+.ar-model__viewer {
+    width: 100%;
+    height: 220px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.ar-model__iframe {
+    width: 100%;
+    height: 220px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+.ar-model__arbtn {
+    background: rgba(0, 255, 136, 0.14);
+    border: 1px solid rgba(0, 255, 136, 0.28);
+    color: #eafff5;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.ar-model__hint {
+    margin-top: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.86rem;
+}
+
+@media (max-width: 520px) {
+    .scan-frame { width: 180px; height: 180px; }
+    .ar-marker { top: calc(50% - 132px); width: 140px; height: 104px; }
+    .ar-info-card { bottom: 84px; }
+    .ar-info-card__header { flex-direction: column; align-items: flex-start; }
+    .ar-info-card__confidence { white-space: normal; }
+    .ar-nutrients { grid-template-columns: 1fr; }
+    .ar-marker-cards { bottom: 84px; }
+    .ar-marker-cards__grid { grid-template-columns: 1fr; }
+    .ar-model__viewer { height: 200px; }
+    .ar-model__iframe { height: 200px; }
+    .ar-detected-pill { top: 64px; }
+}

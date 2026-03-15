@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
     zipCode: String,
     country: String
   },
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Mushroom'
+  }],
   createdAt: {
     type: Date,
     default: Date.now

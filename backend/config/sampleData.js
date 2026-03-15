@@ -12,8 +12,8 @@ const sampleData = [
   },
   {
     name: "Golden Teacher Spore Syringe",
-    description: "For microscopy use only. Premium quality spores in a sterile 10cc syringe.",
-    price: 25,
+    description: "Sterile 10cc syringe prepared for clean inoculation workflows. Sealed packaging and easy handling.",
+    price: 499,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-12.jpg",
@@ -23,8 +23,8 @@ const sampleData = [
   },
   {
     name: "Lion's Mane Liquid Culture",
-    description: "Premium isolated genetics in a 10cc sterile syringe. Ready to inoculate.",
-    price: 35,
+    description: "Active liquid culture in a sterile syringe for quick inoculation. Designed for clean handling and consistent results.",
+    price: 549,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-13.jpg",
@@ -34,26 +34,26 @@ const sampleData = [
   },
   {
     name: "Sterilized Grain Bags (3lbs)",
-    description: "Rye berry spawn bags with self-healing injection ports. Perfect for home growers.",
-    price: 22,
+    description: "Sterilized grain bag with injection port and filter patch for easy inoculation and strong colonization. Great for home setups.",
+    price: 399,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-11.jpg",
     measures: ["1 Bag", "3 Bags"],
-    prices: { "1 Bag": 22, "3 Bags": 60 },
+    prices: { "1 Bag": 399, "3 Bags": 999 },
     rating: 4.9,
     stock: 150,
     isAvailable: true
   },
   {
     name: "CVG Bulk Substrate (5lbs)",
-    description: "Pasteurized Coco Coir, Vermiculite, and Gypsum mix. Ready to fruit.",
-    price: 35,
+    description: "Ready-to-use substrate mix for fruiting and bulk grows. Balanced moisture performance and consistent texture for cultivation.",
+    price: 449,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-14.jpg",
     measures: ["5lbs", "10lbs"],
-    prices: { "5lbs": 35, "10lbs": 65 },
+    prices: { "5lbs": 449, "10lbs": 799 },
     rating: 4.8,
     stock: 200,
     isAvailable: true
@@ -61,7 +61,7 @@ const sampleData = [
   {
     name: "Mushroom Spawn (Seeds)",
     description: "High quality mycelium spawn for various mushroom strains. Perfect for bulk inoculation.",
-    price: 15,
+    price: 299,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-11.jpg",
@@ -72,12 +72,12 @@ const sampleData = [
   {
     name: "Paddy Straw / Wheat Straw",
     description: "Clean, dry straw substrate ideal for growing oyster mushrooms.",
-    price: 10,
+    price: 199,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-12.jpg",
     measures: ["1kg", "5kg", "20kg"],
-    prices: { "1kg": 10, "5kg": 40, "20kg": 120 },
+    prices: { "1kg": 199, "5kg": 699, "20kg": 1999 },
     rating: 4.7,
     stock: 1000,
     isAvailable: true
@@ -85,12 +85,12 @@ const sampleData = [
   {
     name: "Mushroom Growing Bags (Poly Bags)",
     description: "Heat-resistant polypropylene bags with breathable filter patches for gas exchange.",
-    price: 18,
+    price: 299,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-13.jpg",
     measures: ["50 Pack", "100 Pack"],
-    prices: { "50 Pack": 18, "100 Pack": 30 },
+    prices: { "50 Pack": 299, "100 Pack": 449 },
     rating: 4.9,
     stock: 300,
     isAvailable: true
@@ -98,12 +98,12 @@ const sampleData = [
   {
     name: "Substrate (Compost / Sawdust)",
     description: "Pre-mixed hardwood sawdust or compost substrate directly formulated for wood-loving mushrooms.",
-    price: 20,
+    price: 399,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-14.jpg",
     measures: ["5lbs", "10lbs"],
-    prices: { "5lbs": 20, "10lbs": 35 },
+    prices: { "5lbs": 399, "10lbs": 699 },
     rating: 4.8,
     stock: 200,
     isAvailable: true
@@ -111,7 +111,7 @@ const sampleData = [
   {
     name: "Mushroom Racks / Shelves",
     description: "Durable, rust-resistant shelving units for organizing your grow bags and trays.",
-    price: 85,
+    price: 2999,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-11.jpg",
@@ -122,7 +122,7 @@ const sampleData = [
   {
     name: "Humidity Sprayer",
     description: "Automated timed humidity sprayer to maintain optimal growing environment.",
-    price: 45,
+    price: 1499,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-12.jpg",
@@ -133,7 +133,7 @@ const sampleData = [
   {
     name: "Temperature and Humidity Meter",
     description: "Digital hygrometer and thermometer for precise climate monitoring.",
-    price: 12,
+    price: 399,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-13.jpg",
@@ -144,7 +144,7 @@ const sampleData = [
   {
     name: "Water Spray Bottle",
     description: "Ultra-fine continuous mist spray bottle for manual surface hydration.",
-    price: 8,
+    price: 199,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-14.jpg",
@@ -155,7 +155,7 @@ const sampleData = [
   {
     name: "Disinfectant / Formalin Solution",
     description: "Sterilization solution for cleaning grow rooms, tools, and surfaces.",
-    price: 15,
+    price: 249,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-11.jpg",
@@ -166,12 +166,12 @@ const sampleData = [
   {
     name: "Hand Gloves and Face Mask",
     description: "Sterile personal protective equipment to prevent contamination.",
-    price: 5,
+    price: 199,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-12.jpg",
     measures: ["5 Pairs", "50 Box"],
-    prices: { "5 Pairs": 5, "50 Box": 35 },
+    prices: { "5 Pairs": 199, "50 Box": 699 },
     rating: 4.9,
     stock: 400,
     isAvailable: true
@@ -179,7 +179,7 @@ const sampleData = [
   {
     name: "Mushroom Drying Tray",
     description: "Mesh trays for sun-drying or dehydrating your harvested mushrooms safely.",
-    price: 22,
+    price: 699,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-13.jpg",
@@ -190,7 +190,7 @@ const sampleData = [
   {
     name: "Plastic Crates for Harvesting",
     description: "Vented plastic harvesting crates for transporting fresh mushrooms without bruising.",
-    price: 14,
+    price: 499,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-14.jpg",
@@ -201,12 +201,12 @@ const sampleData = [
   {
     name: "Mushroom Packing Covers",
     description: "Breathable plastic retail covers for packaging fresh mushrooms for sale.",
-    price: 10,
+    price: 299,
     category: "Supplies",
     type: "produce",
     image: "/uploads/mush-11.jpg",
     measures: ["100 Pack", "500 Pack"],
-    prices: { "100 Pack": 10, "500 Pack": 40 },
+    prices: { "100 Pack": 299, "500 Pack": 999 },
     rating: 4.8,
     stock: 250,
     isAvailable: true
@@ -214,7 +214,7 @@ const sampleData = [
   {
     name: "Shade Net / Mushroom Growing Tent",
     description: "Agricultural shade nets to build insulated and dark fruiting chambers.",
-    price: 65,
+    price: 1999,
     category: "Equipment",
     type: "produce",
     image: "/uploads/mush-12.jpg",
