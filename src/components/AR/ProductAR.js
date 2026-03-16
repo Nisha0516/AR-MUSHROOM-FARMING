@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBack, IoInformationCircleOutline } from "react-icons/io5";
 import { CartContext } from "../../context/CartContext";
-import { mushroomAPI } from "../../services/api";
+import { mushroomAPI, getAssetUrl } from "../../services/api";
 import "@google/model-viewer";
 import "./MushroomAR.css";
 
@@ -526,7 +526,7 @@ export default function ProductAR() {
   const product = detected?.product || null;
   const currentPrice = resolvePrice(product, selectedMeasure);
   const hasArModel = !!(product?.modelUrl || product?.iosModelUrl);
-  const modelSrc = normalizeModelUrl(product?.modelUrl || product?.iosModelUrl, window.location.origin);
+  const modelSrc = getAssetUrl(product?.modelUrl || product?.iosModelUrl);
   const productUses = getProductUses(product);
 
   const handleAddToCart = () => {

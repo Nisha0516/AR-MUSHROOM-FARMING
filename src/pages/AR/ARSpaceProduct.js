@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Alert, Badge, Button, Container, Spinner } from "react-bootstrap";
-import { mushroomAPI } from "../../services/api";
+import { mushroomAPI, getAssetUrl } from '../../services/api';
 import "@google/model-viewer";
 
 function resolvePrice(product, measure) {
@@ -111,7 +111,7 @@ export default function ARSpaceProduct() {
     };
   }, [id]);
 
-  const absModelUrl = useMemo(() => normalizeModelUrl(product?.modelUrl, window.location.origin), [product?.modelUrl]);
+  const absModelUrl = useMemo(() => getAssetUrl(product?.modelUrl), [product?.modelUrl]);
 
   const currentPrice = useMemo(() => resolvePrice(product, selectedMeasure), [product, selectedMeasure]);
   const uses = useMemo(() => getUses(product), [product]);

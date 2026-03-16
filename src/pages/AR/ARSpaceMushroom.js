@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Alert, Badge, Button, Container, Spinner } from "react-bootstrap";
-import { arAPI } from "../../services/api";
+import { arAPI, getAssetUrl } from '../../services/api';
 import "@google/model-viewer";
 
 function safeArr(v) {
@@ -86,7 +86,7 @@ export default function ARSpaceMushroom() {
     };
   }, [markerKey]);
 
-  const absModelUrl = useMemo(() => normalizeModelUrl(data?.modelSrc, window.location.origin), [data?.modelSrc]);
+  const absModelUrl = useMemo(() => getAssetUrl(data?.modelSrc), [data?.modelSrc]);
 
   useEffect(() => {
     const el = viewerRef.current;
@@ -370,7 +370,7 @@ export default function ARSpaceMushroom() {
                 ) : null}
                 {!absModelUrl && (
                   <div className="text-white-50 small mt-2">
-                    This marker has no `modelSrc` (GLB). Set it in Admin -> AR Markers to enable AR placement.
+                    This marker has no `modelSrc` (GLB). Set it in Admin to AR Markers to enable AR placement.
                   </div>
                 )}
               </div>

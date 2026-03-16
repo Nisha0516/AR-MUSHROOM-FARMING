@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Spinner, Badge, Button, Image } from 'react-bootstrap';
 import { useUser } from '../../context/UserContext';
 import { Navigate, Link } from 'react-router-dom';
-import { orderAPI } from '../../services/api';
+import { orderAPI, getAssetUrl } from '../../services/api';
 import Layout from '../../components/Layouts/Layout';
 import { FaPrint, FaBox, FaCaretDown, FaCaretUp } from 'react-icons/fa';
 
@@ -177,7 +177,7 @@ const Orders = () => {
                                 {(order.items || []).slice(0, 4).map((item, idx) => (
                                   <div key={idx} className="position-relative">
                                     <Image 
-                                      src={item.mushroom && item.mushroom.image ? item.mushroom.image : '/uploads/mush-11.jpg'} 
+                                      src={getAssetUrl(item.mushroom && item.mushroom.image ? item.mushroom.image : '/uploads/mush-11.jpg')} 
                                       alt="Product product"
                                       width={80} 
                                       height={80} 
@@ -210,7 +210,7 @@ const Orders = () => {
                                 <Row key={idx} className="align-items-center bg-white p-3 rounded-3 shadow-sm mx-0">
                                   <Col xs={3} sm={2} className="text-center px-0">
                                      <Image 
-                                      src={item.mushroom && item.mushroom.image ? item.mushroom.image : '/uploads/mush-11.jpg'} 
+                                      src={getAssetUrl(item.mushroom && item.mushroom.image ? item.mushroom.image : '/uploads/mush-11.jpg')} 
                                       alt="Product"
                                       width={60} 
                                       height={60} 

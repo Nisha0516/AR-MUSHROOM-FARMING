@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Alert, Badge, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import Layout from "../../components/Layouts/Layout";
 import { CartContext } from "../../context/CartContext";
-import { mushroomAPI } from "../../services/api";
+import { mushroomAPI, getAssetUrl } from "../../services/api";
 
 function resolvePrice(product, measure) {
   if (!product) return 0;
@@ -84,7 +84,7 @@ export default function ProductDetails() {
             <Col md={6}>
               <div className="rounded-4 overflow-hidden shadow-sm bg-white">
                 <img
-                  src={product.image || "/uploads/mush-11.jpg"}
+                   src={getAssetUrl(product.image || "/uploads/mush-11.jpg")}
                   alt={product.name}
                   style={{ width: "100%", height: 420, objectFit: "cover" }}
                 />

@@ -3,6 +3,7 @@ import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import Layout from "../../components/Layouts/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
+import { getAssetUrl } from "../../services/api";
 import "../../styles/CartStyle.css";
 
 const Cart = () => {
@@ -57,7 +58,7 @@ const Cart = () => {
                           <td>
                             <div className="d-flex align-items-center gap-3">
                               {item.image ? (
-                                <img src={item.image} alt={item.title} className="cart_item_img" />
+                                <img src={getAssetUrl(item.image)} alt={item.title} className="cart_item_img" />
                               ) : (
                                 <div className="cart_item_img d-flex align-items-center justify-content-center bg-light text-muted">
                                   <i className="bi bi-box-seam fs-3"></i>

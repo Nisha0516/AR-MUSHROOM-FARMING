@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import QRCode from "qrcode";
-import { mushroomAPI } from "../../services/api";
+import { mushroomAPI, getAssetUrl } from '../../services/api';
 import "./MushroomMarkers.css";
 
 export default function ProductMarkers() {
@@ -129,7 +129,7 @@ export default function ProductMarkers() {
             <div className="marker-card" key={p._id}>
               <div
                 className="marker-card__img marker-card__img--full"
-                style={{ backgroundImage: `url(${p.image || "/uploads/mush-11.jpg"})` }}
+                style={{ backgroundImage: `url(${getAssetUrl(p.image || "/uploads/mush-11.jpg")})` }}
               />
               <div className="marker-card__body">
                 <div className="marker-card__topline">

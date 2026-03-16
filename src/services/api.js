@@ -1,5 +1,13 @@
 // API Configuration for connecting frontend to backend
 const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+export const BASE_URL = API_BASE_URL.replace('/api', '');
+
+// Helper to resolve static asset URLs (images/models)
+export const getAssetUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return `${BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
 
 // Helper function for API calls
 const apiCall = async (endpoint, options = {}) => {

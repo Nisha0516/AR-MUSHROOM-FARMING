@@ -6,7 +6,7 @@ import mushImg11 from "../../assets/menu/mush-11.jpg";
 import mushImg12 from "../../assets/menu/mush-12.jpg";
 import mushImg13 from "../../assets/menu/mush-13.jpg";
 import mushImg14 from "../../assets/menu/mush-14.jpg";
-import { arAPI } from "../../services/api";
+import { arAPI, getAssetUrl } from "../../services/api";
 import "./MushroomAR.css";
 
 const DEFAULT_MODEL_SRC =
@@ -459,7 +459,7 @@ const MushroomAR = () => {
       }
 
       if (!cancelled && detected.modelSrc) {
-        setResolved3d({ kind: "model-viewer", src: detected.modelSrc });
+        setResolved3d({ kind: "model-viewer", src: getAssetUrl(detected.modelSrc) });
         return;
       }
 
@@ -1066,7 +1066,7 @@ const MushroomAR = () => {
   const trackedDoc = trackedMarkerKey ? arCatalogMapRef.current?.[trackedMarkerKey] : null;
   const overlayName = detected?.name || trackedDoc?.name || "";
   const overlayModelSrc = detected?.modelSrc || trackedDoc?.modelSrc || "";
-  const overlayModelUrl = normalizeModelUrl(overlayModelSrc, window.location.origin);
+  const overlayModelUrl = getAssetUrl(overlayModelSrc);
 
   return (
     <div className="ar-page-container">

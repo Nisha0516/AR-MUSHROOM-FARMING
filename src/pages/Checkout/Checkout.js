@@ -213,7 +213,7 @@ const Checkout = () => {
 
                 <h4><FaFileContract className="me-2" />Delivery Information</h4>
                 {error && <div className="alert alert-danger">{error}</div>}
-                <Form onSubmit={handleCheckout}>
+                <Form onSubmit={handleCheckout} id="checkout-form">
                   <Row>
                     <Col md={6} className="mb-3">
                       <Form.Group>
@@ -315,7 +315,8 @@ const Checkout = () => {
                 </div>
                 <Button
                   className="btn-finalize w-100 mb-3"
-                  onClick={handleCheckout}
+                  type="submit"
+                  form="checkout-form"
                   disabled={loading || cartItems.length === 0}
                 >
                   {loading ? 'Processing via Razorpay...' : "Purchase Now"}

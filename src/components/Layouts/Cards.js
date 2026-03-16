@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Col, Card, Button, Modal, Row, Form, Spinner } from "react-bootstrap";
 import { CartContext } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { userAPI, mushroomAPI } from "../../services/api";
+import { userAPI, mushroomAPI, getAssetUrl } from "../../services/api";
 import ProductReviews from "../Shop/ProductReviews";
 
 function Cards({ id, type, image, rating, title, paragraph, price, measures, prices, renderRatingIcons, modelUrl, iosModelUrl }) {
@@ -62,7 +62,7 @@ function Cards({ id, type, image, rating, title, paragraph, price, measures, pri
       <Col sm={6} lg={4} xl={3} className="mb-4">
         <Card className="h-100 border-0 shadow-sm overflow-hidden d-flex flex-column">
           <div className="card_image_container position-relative">
-            <Card.Img variant="top" src={image} className="img-fluid" style={{ height: '220px', objectFit: 'cover' }} />
+            <Card.Img variant="top" src={getAssetUrl(image)} className="img-fluid" style={{ height: '220px', objectFit: 'cover' }} />
             {type === 'produce' && (
               <span className="position-absolute top-0 start-0 m-3 badge bg-success">Fresh Produce</span>
             )}

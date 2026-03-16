@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Table, Button, Form, Badge, Modal, Spinner, Alert, Image } from "react-bootstrap";
 import QRCode from "qrcode";
 import AdminLayout from "./AdminLayout";
-import { mushroomAPI, uploadAPI } from "../../services/api";
+import { mushroomAPI, uploadAPI, getAssetUrl } from "../../services/api";
 import "../../styles/AdminStyle.css";
 
 const ProductCatalog = () => {
@@ -281,7 +281,7 @@ const ProductCatalog = () => {
                                     <tr key={product._id} className="border-bottom">
                                         <td className="py-2 ps-4">
                                             <Image
-                                                src={product.image || '/uploads/mush-11.jpg'}
+                                                src={getAssetUrl(product.image || '/uploads/mush-11.jpg')}
                                                 alt={product.name}
                                                 width={55}
                                                 height={55}
@@ -452,7 +452,7 @@ const ProductCatalog = () => {
                             {editError && <Alert variant="danger" className="small">{editError}</Alert>}
                             <div className="mb-4 p-3 rounded-3 bg-light d-flex align-items-center gap-3">
                                 <Image
-                                    src={editProduct.image || '/uploads/mush-11.jpg'}
+                                    src={getAssetUrl(editProduct.image || '/uploads/mush-11.jpg')}
                                     alt="Current"
                                     width={80}
                                     height={80}
