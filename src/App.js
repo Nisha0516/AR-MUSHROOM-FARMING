@@ -17,7 +17,6 @@ import PaymentMethods from "./pages/Profile/PaymentMethods";
 import MushroomMarkers from "./pages/AR/MushroomMarkers";
 import ScanProduct from "./pages/AR/ScanProduct";
 import ProductDetails from "./pages/Shop/ProductDetails";
-import ProductMarkers from "./pages/AR/ProductMarkers";
 import ARSpaceProduct from "./pages/AR/ARSpaceProduct";
 import ARSpaceMushroom from "./pages/AR/ARSpaceMushroom";
 
