@@ -11,18 +11,47 @@ const app = express();
 
 // Middleware
 // Configure CORS to explicitly allow the frontend origin(s).
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000').split(',');
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+function matchesAllowedOrigin(requestOrigin) {
+  return allowedOrigins.some((allowedOrigin) => {
+    if (allowedOrigin.includes('*')) {
+      const pattern = '^' + allowedOrigin
+        .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/\*/g, '.*') + '$';
+      return new RegExp(pattern).test(requestOrigin);
+    }
+
+    return allowedOrigin === requestOrigin;
+  });
+}
+
+const corsOptions = {
+  origin(origin, callback) {
+    // Allow server-to-server calls and health checks without an Origin header.
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (matchesAllowedOrigin(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true
+};
+
 console.log('Allowed CORS origins:', allowedOrigins);
 
-
 // Restrict CORS origins to the configured list instead of allowing everything.
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+app.use(cors(corsOptions));
 
-// respond to preflight requests
-app.options('*', cors());
+// Respond to preflight requests using the same CORS policy.
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
