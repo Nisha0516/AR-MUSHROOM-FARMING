@@ -187,3 +187,115 @@
 .bg-stone {
     background-color: #f8f9fa;
 }
+
+/* Catalog grid */
+.admin-catalog-controls .form-control,
+.admin-catalog-controls .form-select {
+    min-width: 180px;
+}
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.product-card {
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    border: 1px solid var(--admin-border);
+    background: var(--admin-card-bg);
+}
+
+.product-image {
+    width: 92px;
+    height: 92px;
+    object-fit: cover;
+    border: 1px solid var(--admin-border);
+}
+
+.product-card .card-body {
+    padding: 12px !important;
+}
+
+/* Make buttons consistent */
+.product-card .btn {
+    font-size: 0.85rem;
+}
+
+/* Action buttons */
+.action-item {
+    width: 64px;
+}
+
+.action-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.action-btn i {
+    font-size: 1.15rem;
+}
+
+.product-price {
+    font-size: 1rem;
+}
+
+.product-stock {
+    margin-top: 2px;
+    font-size: 0.82rem;
+}
+
+/* tighten action row spacing on small screens */
+.action-btn-row { gap: 12px; }
+
+@media (max-width: 576px) {
+    .catalog-grid { grid-template-columns: 1fr; }
+    .action-item { width: 48px; }
+    .action-btn { width: 48px; height: 48px; }
+}
+
+/* Focus styles for keyboard users */
+.action-btn:focus,
+.action-btn:focus-visible {
+    outline: 3px solid rgba(14, 165, 233, 0.45);
+    outline-offset: 2px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
+    border-color: rgba(14, 165, 233, 0.6);
+}
+
+/* Edit modal image card */
+.edit-image-card img,
+.edit-image-card .rounded-3 {
+    max-width: 100%;
+}
+.edit-image-card {
+    border: 1px dashed var(--admin-border);
+}
+
+.edit-product-form .form-label {
+    letter-spacing: 0.6px;
+}
+
+.edit-product-form .form-control,
+.edit-product-form .form-select {
+    background: #fbfbfb;
+}
+
+.add-product-form .form-control,
+.add-product-form .form-select {
+    background: #fbfbfb;
+}
+
+.add-product-form .edit-image-card {
+    border: 1px dashed var(--admin-border);
+}

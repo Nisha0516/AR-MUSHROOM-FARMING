@@ -10,6 +10,40 @@ const sampleData = [
     stock: 100,
     isAvailable: true
   },
+  // Fresh oyster products
+  {
+    name: "Fresh Oyster - 250g",
+    description: "Freshly harvested oyster mushrooms — packed and ready for sale. Grown locally with care.",
+    price: 199,
+    category: "Oyster",
+    type: "produce",
+    image: "/uploads/mush-14.jpg",
+    rating: 4.8,
+    stock: 120,
+    isAvailable: true
+  },
+  {
+    name: "Fresh Oyster - 500g",
+    description: "Half-kilo pack of fresh oyster mushrooms — ideal for restaurants and bulk buyers.",
+    price: 349,
+    category: "Oyster",
+    type: "produce",
+    image: "/uploads/mush-13.jpg",
+    rating: 4.9,
+    stock: 80,
+    isAvailable: true
+  },
+  {
+    name: "Fresh Oyster - Mixed Pack (250g x 2)",
+    description: "Two 250g packs in one mixed bundle — great value and freshness guaranteed.",
+    price: 349,
+    category: "Oyster",
+    type: "produce",
+    image: "/uploads/mush-12.jpg",
+    rating: 4.9,
+    stock: 60,
+    isAvailable: true
+  },
   {
     name: "Golden Teacher Spore Syringe",
     description: "Sterile 10cc syringe prepared for clean inoculation workflows. Sealed packaging and easy handling.",

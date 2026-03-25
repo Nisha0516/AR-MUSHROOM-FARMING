@@ -34,7 +34,7 @@ const Cart = () => {
         <Container>
           <Row>
             <Col lg={12} className="text-center mb-5">
-              <h2 className="cart_title">{hasProduce ? "Your Shopping Cart" : "Your Project Cart"}</h2>
+              <h2 className="cart_title">{hasProduce ? "Your Shopping Cart" : "Your Cart!!"}</h2>
             </Col>
           </Row>
 
@@ -114,11 +114,11 @@ const Cart = () => {
 
               <Col lg={4}>
                 <div className="cart_summary p-4">
-                  <h4 className="summary_title mb-4">{hasProduce ? "Order Summary" : "Project Summary"}</h4>
+                  <h4 className="summary_title mb-4">{hasProduce ? "Order Summary" : "Order Summary"}</h4>
                   
                   <div className="summary_item d-flex justify-content-between mb-3">
                     <span>Subtotal</span>
-                    <span className="fw-bold text-dark">₨{subtotal.toFixed(2)}</span>
+                    <span className="fw-bold text-dark">₨ {subtotal.toFixed(2)}</span>
                   </div>
                   
                   <div className="summary_item d-flex justify-content-between mb-3">
@@ -128,16 +128,16 @@ const Cart = () => {
                   
                   <div className="summary_item d-flex justify-content-between mb-3">
                     <span>Tax (10%)</span>
-                    <span className="fw-bold text-dark">₨{tax.toFixed(2)}</span>
+                    <span className="fw-bold text-dark">₨ {tax.toFixed(2)}</span>
                   </div>
                   
                   <div className="summary_total d-flex justify-content-between align-items-center">
                     <span className="total_label">Total</span>
-                    <span className="total_amount">₨{total.toFixed(2)}</span>
+                    <span className="total_amount">₨ {total.toFixed(2)}</span>
                   </div>
                   
                   <Button onClick={handleProceed} className="btn-checkout w-100 mb-3 d-flex align-items-center justify-content-center">
-                    {hasProduce ? "Proceed to Checkout" : "Confirm Project"} <i className="bi bi-arrow-right ms-2"></i>
+                    {hasProduce ? "Proceed to Checkout" : "Confirm Order"} <i className="bi bi-arrow-right ms-2"></i>
                   </Button>
                   
                   <Link to="/shop" className="btn btn-continue w-100 text-center d-block text-decoration-none">

@@ -14,7 +14,6 @@ import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Profile/Orders";
 import SavedAddresses from "./pages/Profile/SavedAddresses";
 import PaymentMethods from "./pages/Profile/PaymentMethods";
-import ScanGrow from "./pages/AR/ScanGrow";
 import MushroomMarkers from "./pages/AR/MushroomMarkers";
 import ScanProduct from "./pages/AR/ScanProduct";
 import ProductDetails from "./pages/Shop/ProductDetails";
@@ -59,10 +58,10 @@ function App() {
             <Route path="/orders" element={<Orders />} />
             <Route path="/saved-addresses" element={<SavedAddresses />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
-            <Route path="/scan-mushroom" element={<ScanGrow />} />
+            {/* /scan-mushroom removed */}
             <Route path="/scan-product" element={<ScanProduct />} />
             <Route path="/mushroom-markers" element={<MushroomMarkers />} />
-            <Route path="/product-markers" element={<ProductMarkers />} />
+            {/* /product-markers removed */}
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/ar-space/product/:id" element={<ARSpaceProduct />} />
             <Route path="/ar-space/mushroom/:markerKey" element={<ARSpaceMushroom />} />

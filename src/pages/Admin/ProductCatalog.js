@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Table, Button, Form, Badge, Modal, Spinner, Alert, Image } from "react-bootstrap";
+import { Row, Col, Card, Button, Form, Badge, Modal, Spinner, Alert, Image, InputGroup } from "react-bootstrap";
 import QRCode from "qrcode";
 import AdminLayout from "./AdminLayout";
 import { mushroomAPI, uploadAPI, getAssetUrl } from "../../services/api";
@@ -30,7 +30,12 @@ const ProductCatalog = () => {
     const [showQrModal, setShowQrModal] = useState(false);
     const [qrProduct, setQrProduct] = useState(null);
     const [qrDataUrl, setQrDataUrl] = useState("");
+    const [showCommonQr, setShowCommonQr] = useState(false);
+    const [commonQrDataUrl, setCommonQrDataUrl] = useState("");
     const [normalizing, setNormalizing] = useState(false);
+    const [query, setQuery] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("All");
+    const [sortBy, setSortBy] = useState("name");
 
     const fetchInventory = async () => {
         try {
@@ -214,18 +219,12 @@ const ProductCatalog = () => {
 
     const openQrModal = async (product) => {
         try {
-            const payload = typeof window !== "undefined" ? `${window.location.origin}/product/${product._id}` : `PRODUCT:${product._id}`;
-            const url = await QRCode.toDataURL(payload, {
-                errorCorrectionLevel: "M",
-                margin: 2,
-                width: 320,
-                color: { dark: "#0b0b0e", light: "#ffffff" },
-            });
+            const commonPath = typeof window !== "undefined" ? `${window.location.origin}/qr/QR.png` : `/qr/QR.png`;
             setQrProduct(product);
-            setQrDataUrl(url);
+            setQrDataUrl(commonPath);
             setShowQrModal(true);
         } catch (e) {
-            alert("Failed to generate QR.");
+            alert("Failed to open QR.");
         }
     };
 
@@ -252,9 +251,47 @@ const ProductCatalog = () => {
                         >
                             <i className="bi bi-plus-lg me-2"></i> Register New Product
                         </Button>
+                        <Button
+                            onClick={() => {
+                                try {
+                                    const path = typeof window !== "undefined" ? `${window.location.origin}/qr/QR.png` : `/qr/QR.png`;
+                                    setCommonQrDataUrl(path);
+                                    setShowCommonQr(true);
+                                } catch (e) {
+                                    alert('Failed to open common QR.');
+                                }
+                            }}
+                            variant="outline-secondary"
+                            className="rounded-pill px-4"
+                            style={{ fontWeight: 600, fontSize: '0.85rem' }}
+                        >
+                            <i className="bi bi-qr-code me-2"></i> Common QR
+                        </Button>
                     </div>
                 </Card.Header>
-                <Card.Body className="p-0">
+                <Card.Body className="p-4">
+                    <div className="d-flex flex-column flex-md-row align-items-start justify-content-between admin-catalog-controls mb-3 gap-3">
+                        <InputGroup style={{ maxWidth: 520 }}>
+                            <Form.Control id="catalog-search" aria-label="Search products by name" placeholder="Search products by name..." value={query} onChange={(e) => setQuery(e.target.value)} />
+                            <Button variant="outline-secondary" onClick={() => { setQuery(""); setCategoryFilter("All"); setSortBy("name"); }}>Clear</Button>
+                        </InputGroup>
+
+                        <div className="d-flex gap-2">
+                            <Form.Select id="catalog-category" aria-label="Filter by category" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="me-2">
+                                <option value="All">All Categories</option>
+                                <option value="Kit">Grow Kit</option>
+                                <option value="Supplies">Cultivation Supply</option>
+                                <option value="Equipment">Hardware / Equipment</option>
+                                <option value="Oyster">Fresh Oyster</option>
+                                <option value="Other">Other</option>
+                            </Form.Select>
+                            <Form.Select id="catalog-sort" aria-label="Sort products" value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ width: 160 }}>
+                                <option value="name">Sort: Name</option>
+                                <option value="price">Sort: Price</option>
+                                <option value="stock">Sort: Stock</option>
+                            </Form.Select>
+                        </div>
+                    </div>
                     {loading ? (
                         <div className="text-center p-5">
                             <Spinner animation="border" style={{ color: "var(--admin-accent)" }} />
@@ -263,151 +300,169 @@ const ProductCatalog = () => {
                     ) : error ? (
                         <div className="p-4"><Alert variant="danger">{error}</Alert></div>
                     ) : (
-                        <Table responsive hover className="align-middle mb-0">
-                            <thead className="bg-stone">
-                                <tr className="small text-stone text-uppercase">
-                                    <th className="py-3 ps-4">Image</th>
-                                    <th className="py-3">Display Name</th>
-                                    <th className="py-3">Category</th>
-                                    <th className="py-3 text-center">AR</th>
-                                    <th className="py-3 text-center">Status</th>
-                                    <th className="py-3">Stock</th>
-                                    <th className="py-3">Unit Price</th>
-                                    <th className="py-3 text-end pe-4">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {inventory.map((product) => (
-                                    <tr key={product._id} className="border-bottom">
-                                        <td className="py-2 ps-4">
-                                            <Image
-                                                src={getAssetUrl(product.image || '/uploads/mush-11.jpg')}
-                                                alt={product.name}
-                                                width={55}
-                                                height={55}
-                                                className="rounded-3 border"
-                                                style={{ objectFit: 'cover' }}
-                                            />
-                                        </td>
-                                        <td className="py-3 font-weight-bold">{product.name}</td>
-                                        <td className="py-3 small text-capitalize">{product.category}</td>
-                                        <td className="py-3 text-center">
-                                            {(product.modelUrl || product.iosModelUrl) ?
-                                                <Badge bg="primary" className="px-3 py-2">AR READY</Badge> :
-                                                <Badge bg="secondary" className="px-3 py-2">NO MODEL</Badge>
-                                            }
-                                        </td>
-                                        <td className="py-3 text-center">
-                                            {product.isAvailable ?
-                                                <Badge bg="success" className="px-3 py-2">AVAILABLE</Badge> :
-                                                <Badge bg="secondary" className="px-3 py-2">INACTIVE</Badge>
-                                            }
-                                        </td>
-                                        <td className="py-3 font-weight-bold">
-                                            {product.stock || 0}
-                                            {(product.stock || 0) < 10 && (
-                                                <Badge bg="danger" className="ms-2 px-2 py-1" style={{ fontSize: '0.65rem' }}>LOW</Badge>
-                                            )}
-                                        </td>
-                                        <td className="py-3 font-weight-bold">₨ {product.price?.toLocaleString()}</td>
-                                        <td className="py-3 text-end pe-4">
-                                            <Button size="sm" variant="outline-primary" className="me-2 rounded-pill px-3" onClick={() => openEditModal(product)}>
-                                                <i className="bi bi-pencil me-1"></i> Edit
-                                            </Button>
-                                            <Button size="sm" variant="outline-dark" className="me-2 rounded-pill px-3" onClick={() => openQrModal(product)}>
-                                                <i className="bi bi-qr-code me-1"></i> QR
-                                            </Button>
-                                            <Button size="sm" variant="outline-danger" className="rounded-pill px-3" onClick={() => handleDelete(product._id, product.name)}>
-                                                <i className="bi bi-trash me-1"></i> Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {inventory.length === 0 && (
-                                    <tr>
-                                        <td colSpan="8" className="text-center py-5 text-muted">Database contains no items.</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
+                        <div className="catalog-grid">
+                            {inventory && inventory.length > 0 ? (
+                                (() => {
+                                    const filtered = inventory.filter((p) => {
+                                        const matchesQuery = query.trim() === "" || p.name.toLowerCase().includes(query.toLowerCase());
+                                        const matchesCategory = categoryFilter === "All" || (p.category || "").toLowerCase() === categoryFilter.toLowerCase();
+                                        return matchesQuery && matchesCategory;
+                                    }).sort((a, b) => {
+                                        if (sortBy === 'price') return (a.price || 0) - (b.price || 0);
+                                        if (sortBy === 'stock') return (b.stock || 0) - (a.stock || 0);
+                                        return (a.name || '').localeCompare(b.name || '');
+                                    });
+
+                                    if (filtered.length === 0) {
+                                        return <div className="text-center text-muted w-100 py-5" role="status" aria-live="polite">No products match the filters.</div>;
+                                    }
+
+                                    return filtered.map((product) => (
+                                        <Card key={product._id} className="product-card">
+                                            <Card.Body className="d-flex gap-3 align-items-center p-3">
+                                                    <Image src={getAssetUrl(product.image || '/uploads/mush-11.jpg')} alt={product.name} width={92} height={92} className="product-image rounded-3" style={{ objectFit: 'cover' }} />
+                                                    <div className="flex-grow-1">
+                                                        <div className="d-flex justify-content-between align-items-center mb-1">
+                                                            <div>
+                                                                <div className="fw-bold">{product.name}</div>
+                                                                <div className="small text-stone text-capitalize">{product.category}</div>
+                                                            </div>
+                                                            <div className="text-end d-flex flex-column align-items-end">
+                                                                <div className="fw-bold product-price">₨ {product.price?.toLocaleString()}</div>
+                                                                <div className="small text-stone product-stock">Stock: {product.stock || 0}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="d-flex gap-2 align-items-center mt-2">
+                                                            {(product.modelUrl || product.iosModelUrl) ?
+                                                                <Badge bg="primary" className="px-3 py-2">AR READY</Badge> :
+                                                                <Badge bg="secondary" className="px-3 py-2">NO MODEL</Badge>
+                                                            }
+                                                            {product.isAvailable ? <Badge bg="success" className="px-3 py-2">AVAILABLE</Badge> : <Badge bg="secondary" className="px-3 py-2">INACTIVE</Badge>}
+                                                        </div>
+                                                        <div className="d-flex justify-content-end gap-3 mt-3 action-btn-row">
+                                                            <div className="action-item text-center">
+                                                                    <Button onClick={() => openEditModal(product)} variant="outline-primary" className="action-btn" aria-label={`Edit ${product.name}`} title={`Edit ${product.name}`}>
+                                                                        <i className="bi bi-pencil" />
+                                                                    </Button>
+                                                                    <div className="small mt-1">Edit</div>
+                                                                </div>
+
+                                                            <div className="action-item text-center">
+                                                                <Button onClick={() => openQrModal(product)} variant="outline-dark" className="action-btn" aria-label={`Show QR for ${product.name}`} title={`Show QR for ${product.name}`}>
+                                                                    <i className="bi bi-qr-code" />
+                                                                </Button>
+                                                                <div className="small mt-1">QR</div>
+                                                            </div>
+
+                                                            <div className="action-item text-center">
+                                                                <Button onClick={() => handleDelete(product._id, product.name)} variant="outline-danger" className="action-btn" aria-label={`Delete ${product.name}`} title={`Delete ${product.name}`}>
+                                                                    <i className="bi bi-trash" />
+                                                                </Button>
+                                                                <div className="small mt-1">Delete</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Card.Body>
+                                        </Card>
+                                    ));
+                                })()
+                            ) : (
+                                <div className="text-center py-5 text-muted">Database contains no items.</div>
+                            )}
+                        </div>
                     )}
                 </Card.Body>
             </Card>
 
             {/* ADD PRODUCT MODAL */}
-            <Modal show={showAddModal} onHide={() => setShowAddModal(false)} centered size="lg" className="admin-portal">
+            <Modal show={showAddModal} onHide={() => setShowAddModal(false)} centered size="lg" className="admin-portal" aria-labelledby="addProductModalLabel">
                 <Modal.Header closeButton className="border-0 p-4 pb-0">
-                    <Modal.Title className="font-weight-bold">Register New Product</Modal.Title>
+                    <Modal.Title id="addProductModalLabel" className="font-weight-bold">Register New Product</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit} className="add-product-form">
                         {submitError && <Alert variant="danger" className="small">{submitError}</Alert>}
-                        <Row className="mb-3">
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Product Name</Form.Label>
-                                    <Form.Control name="name" value={formData.name} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="e.g. Blue Oyster Master Spawn" required />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Category</Form.Label>
-                                    <Form.Select name="category" value={formData.category} onChange={handleInputChange} className="bg-stone border-0 py-2">
-                                        <option value="Kit">Grow Kit</option>
-                                        <option value="Supplies">Cultivation Supply</option>
-                                        <option value="Equipment">Hardware / Equipment</option>
-                                        <option value="Oyster">Fresh Oyster</option>
-                                        <option value="Other">Other Category</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                        </Row>
 
                         <Row className="mb-3">
-                            <Col md={12}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Uses (one per line)</Form.Label>
-                                    <Form.Control
-                                        as="textarea"
-                                        rows={3}
-                                        name="usesText"
-                                        value={formData.usesText}
-                                        onChange={handleInputChange}
-                                        className="bg-stone border-0 py-2"
-                                        placeholder={"Home cultivation\nBeginner friendly\nHigh yield"}
+                            <Col md={4}>
+                                <div className="edit-image-card p-3 rounded-3 bg-light text-center">
+                                    <Image
+                                        src={getAssetUrl(formData.image || '/uploads/mush-11.jpg')}
+                                        alt="Preview"
+                                        width={180}
+                                        height={180}
+                                        className="rounded-3 border mb-2"
+                                        style={{ objectFit: 'cover' }}
                                     />
-                                </Form.Group>
+                                    <p className="mb-1 fw-bold small">Product Image</p>
+                                    <p className="mb-2 text-muted small">Upload an image for the product</p>
+                                    <Form.Control type="file" onChange={(e) => setFile(e.target.files[0])} className="mt-2" accept=".jpg,.jpeg,.png" />
+                                </div>
                             </Col>
-                        </Row>
-                        <Row className="mb-4">
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Price (₨)</Form.Label>
-                                    <Form.Control type="number" name="price" value={formData.price} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="0.00" required />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Initial Stock</Form.Label>
-                                    <Form.Control type="number" name="stock" value={formData.stock} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="100" required />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Product Image</Form.Label>
-                                    <Form.Control type="file" onChange={(e) => setFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".jpg,.jpeg,.png" />
-                                </Form.Group>
+                            <Col md={8}>
+                                <Row>
+                                    <Col md={8}>
+                                        <Form.Group>
+                                            <Form.Label className="small text-stone text-uppercase font-weight-bold">Product Name</Form.Label>
+                                            <Form.Control name="name" value={formData.name} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="e.g. Blue Oyster Master Spawn" required />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Form.Group>
+                                            <Form.Label className="small text-stone text-uppercase font-weight-bold">Category</Form.Label>
+                                            <Form.Select name="category" value={formData.category} onChange={handleInputChange} className="bg-stone border-0 py-2">
+                                                <option value="Kit">Grow Kit</option>
+                                                <option value="Supplies">Cultivation Supply</option>
+                                                <option value="Equipment">Hardware / Equipment</option>
+                                                <option value="Oyster">Fresh Oyster</option>
+                                                <option value="Other">Other Category</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row className="mt-3">
+                                    <Col md={12}>
+                                        <Form.Group>
+                                            <Form.Label className="small text-stone text-uppercase font-weight-bold">Uses (one per line)</Form.Label>
+                                            <Form.Control
+                                                as="textarea"
+                                                rows={3}
+                                                name="usesText"
+                                                value={formData.usesText}
+                                                onChange={handleInputChange}
+                                                className="bg-stone border-0 py-2"
+                                                placeholder={"Home cultivation\nBeginner friendly\nHigh yield"}
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row className="mt-3">
+                                    <Col md={4}>
+                                        <Form.Group>
+                                            <Form.Label className="small text-stone text-uppercase font-weight-bold">Price (₨)</Form.Label>
+                                            <Form.Control type="number" name="price" value={formData.price} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="0.00" required />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Form.Group>
+                                            <Form.Label className="small text-stone text-uppercase font-weight-bold">Initial Stock</Form.Label>
+                                            <Form.Control type="number" name="stock" value={formData.stock} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="100" required />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Form.Group>
+                                            <Form.Label className="small text-stone text-uppercase font-weight-bold">3D Model (GLB) Optional</Form.Label>
+                                            <Form.Control type="file" onChange={(e) => setModelFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".glb" />
+                                            <Form.Text className="text-muted small">Used for Android/WebXR + Scene Viewer.</Form.Text>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
 
                         <Row className="mb-3">
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">3D Model (GLB) Optional</Form.Label>
-                                    <Form.Control type="file" onChange={(e) => setModelFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".glb" />
-                                    <Form.Text className="text-muted small">Used for Android/WebXR + Scene Viewer.</Form.Text>
-                                </Form.Group>
-                            </Col>
                             <Col md={6}>
                                 <Form.Group>
                                     <Form.Label className="small text-stone text-uppercase font-weight-bold">iOS Model (USDZ) Optional</Form.Label>
@@ -415,22 +470,14 @@ const ProductCatalog = () => {
                                     <Form.Text className="text-muted small">Used for iPhone Quick Look AR.</Form.Text>
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row className="mb-3">
                             <Col md={6}>
                                 <Form.Group>
                                     <Form.Label className="small text-stone text-uppercase font-weight-bold">3D Model URL (optional)</Form.Label>
                                     <Form.Control name="modelUrl" value={formData.modelUrl} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="/uploads/model.glb" />
                                 </Form.Group>
                             </Col>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">iOS Model URL (optional)</Form.Label>
-                                    <Form.Control name="iosModelUrl" value={formData.iosModelUrl} onChange={handleInputChange} className="bg-stone border-0 py-2" placeholder="/uploads/model.usdz" />
-                                </Form.Group>
-                            </Col>
                         </Row>
+
                         <div className="d-flex justify-content-end">
                             <Button variant="link" className="text-stone text-decoration-none me-3" onClick={() => setShowAddModal(false)} disabled={submitting}>Cancel</Button>
                             <Button type="submit" variant="dark" className="px-4 py-2 border-0 bg-dark shadow-sm" disabled={submitting}>
@@ -442,54 +489,61 @@ const ProductCatalog = () => {
             </Modal>
 
             {/* EDIT PRODUCT MODAL */}
-            <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered size="lg" className="admin-portal">
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered size="lg" className="admin-portal" aria-labelledby="editProductModalLabel">
                 <Modal.Header closeButton className="border-0 p-4 pb-0">
-                    <Modal.Title className="font-weight-bold">✏️ Edit Product</Modal.Title>
+                    <Modal.Title id="editProductModalLabel" className="font-weight-bold">✏️ Edit Product</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
                     {editProduct && (
-                        <Form onSubmit={handleEditSubmit}>
+                        <Form onSubmit={handleEditSubmit} className="edit-product-form">
                             {editError && <Alert variant="danger" className="small">{editError}</Alert>}
-                            <div className="mb-4 p-3 rounded-3 bg-light d-flex align-items-center gap-3">
-                                <Image
-                                    src={getAssetUrl(editProduct.image || '/uploads/mush-11.jpg')}
-                                    alt="Current"
-                                    width={80}
-                                    height={80}
-                                    className="rounded-3 border"
-                                    style={{ objectFit: 'cover' }}
-                                />
-                                <div>
-                                    <p className="mb-1 fw-bold small">Current Image</p>
-                                    <p className="mb-0 text-muted small">Upload a new image below to replace it</p>
-                                </div>
-                            </div>
+
                             <Row className="mb-3">
-                                <Col md={6}>
-                                    <Form.Group>
-                                        <Form.Label className="small text-stone text-uppercase font-weight-bold">Product Name</Form.Label>
-                                        <Form.Control name="name" value={editFormData.name} onChange={handleEditInputChange} className="bg-stone border-0 py-2" required />
-                                    </Form.Group>
+                                <Col md={4}>
+                                    <div className="edit-image-card p-3 rounded-3 bg-light text-center">
+                                        <Image
+                                            src={getAssetUrl(editProduct.image || '/uploads/mush-11.jpg')}
+                                            alt="Current"
+                                            width={180}
+                                            height={180}
+                                            className="rounded-3 border mb-2"
+                                            style={{ objectFit: 'cover' }}
+                                        />
+                                        <p className="mb-1 fw-bold small">Current Image</p>
+                                        <p className="mb-2 text-muted small">Upload a new image to replace it</p>
+                                        <Form.Control type="file" onChange={(e) => setEditFile(e.target.files[0])} className="mt-2" accept=".jpg,.jpeg,.png" />
+                                    </div>
                                 </Col>
-                                <Col md={6}>
-                                    <Form.Group>
-                                        <Form.Label className="small text-stone text-uppercase font-weight-bold">Category</Form.Label>
-                                        <Form.Select name="category" value={editFormData.category} onChange={handleEditInputChange} className="bg-stone border-0 py-2">
-                                            <option value="Kit">Grow Kit</option>
-                                            <option value="Supplies">Cultivation Supply</option>
-                                            <option value="Equipment">Hardware / Equipment</option>
-                                            <option value="Oyster">Fresh Oyster</option>
-                                            <option value="Other">Other Category</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row className="mb-3">
-                                <Col md={12}>
-                                    <Form.Group>
-                                        <Form.Label className="small text-stone text-uppercase font-weight-bold">Description</Form.Label>
-                                        <Form.Control as="textarea" rows={2} name="description" value={editFormData.description} onChange={handleEditInputChange} className="bg-stone border-0 py-2" />
-                                    </Form.Group>
+                                <Col md={8}>
+                                    <Row>
+                                        <Col md={8}>
+                                            <Form.Group>
+                                                <Form.Label className="small text-stone text-uppercase font-weight-bold">Product Name</Form.Label>
+                                                <Form.Control name="name" value={editFormData.name} onChange={handleEditInputChange} className="bg-stone border-0 py-2" required />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label className="small text-stone text-uppercase font-weight-bold">Category</Form.Label>
+                                                <Form.Select name="category" value={editFormData.category} onChange={handleEditInputChange} className="bg-stone border-0 py-2">
+                                                    <option value="Kit">Grow Kit</option>
+                                                    <option value="Supplies">Cultivation Supply</option>
+                                                    <option value="Equipment">Hardware / Equipment</option>
+                                                    <option value="Oyster">Fresh Oyster</option>
+                                                    <option value="Other">Other Category</option>
+                                                </Form.Select>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+
+                                    <Row className="mt-3">
+                                        <Col md={12}>
+                                            <Form.Group>
+                                                <Form.Label className="small text-stone text-uppercase font-weight-bold">Description</Form.Label>
+                                                <Form.Control as="textarea" rows={2} name="description" value={editFormData.description} onChange={handleEditInputChange} className="bg-stone border-0 py-2" />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
 
@@ -509,7 +563,8 @@ const ProductCatalog = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row className="mb-4">
+
+                            <Row className="mb-3">
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label className="small text-stone text-uppercase font-weight-bold">Price (₨)</Form.Label>
@@ -525,27 +580,28 @@ const ProductCatalog = () => {
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label className="small text-stone text-uppercase font-weight-bold">New Image (optional)</Form.Label>
-                                    <Form.Control type="file" onChange={(e) => setEditFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".jpg,.jpeg,.png" />
-                                </Form.Group>
-                            </Col>
-                        </Row>
+                                        <Form.Control type="file" onChange={(e) => setEditFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".jpg,.jpeg,.png" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-                        <Row className="mb-3">
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Replace 3D Model (GLB)</Form.Label>
-                                    <Form.Control type="file" onChange={(e) => setEditModelFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".glb" />
-                                    <Form.Control name="modelUrl" value={editFormData.modelUrl} onChange={handleEditInputChange} className="bg-stone border-0 py-2 mt-2" placeholder="/uploads/model.glb" />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label className="small text-stone text-uppercase font-weight-bold">Replace iOS Model (USDZ)</Form.Label>
-                                    <Form.Control type="file" onChange={(e) => setEditIosModelFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".usdz" />
-                                    <Form.Control name="iosModelUrl" value={editFormData.iosModelUrl} onChange={handleEditInputChange} className="bg-stone border-0 py-2 mt-2" placeholder="/uploads/model.usdz" />
-                                </Form.Group>
-                            </Col>
-                        </Row>
+                            <Row className="mb-3">
+                                <Col md={6}>
+                                    <Form.Group>
+                                        <Form.Label className="small text-stone text-uppercase font-weight-bold">Replace 3D Model (GLB)</Form.Label>
+                                        <Form.Control type="file" onChange={(e) => setEditModelFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".glb" />
+                                        <Form.Control name="modelUrl" value={editFormData.modelUrl} onChange={handleEditInputChange} className="bg-stone border-0 py-2 mt-2" placeholder="/uploads/model.glb" />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group>
+                                        <Form.Label className="small text-stone text-uppercase font-weight-bold">Replace iOS Model (USDZ)</Form.Label>
+                                        <Form.Control type="file" onChange={(e) => setEditIosModelFile(e.target.files[0])} className="bg-stone border-0 py-1" accept=".usdz" />
+                                        <Form.Control name="iosModelUrl" value={editFormData.iosModelUrl} onChange={handleEditInputChange} className="bg-stone border-0 py-2 mt-2" placeholder="/uploads/model.usdz" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
                             <div className="d-flex justify-content-end">
                                 <Button variant="link" className="text-stone text-decoration-none me-3" onClick={() => setShowEditModal(false)} disabled={editSubmitting}>Cancel</Button>
                                 <Button type="submit" variant="dark" className="px-4 py-2 border-0 bg-dark shadow-sm" disabled={editSubmitting}>
@@ -558,9 +614,9 @@ const ProductCatalog = () => {
             </Modal>
 
             {/* QR MODAL */}
-            <Modal show={showQrModal} onHide={() => setShowQrModal(false)} centered>
+            <Modal show={showQrModal} onHide={() => setShowQrModal(false)} centered aria-labelledby="qrModalLabel">
                 <Modal.Header closeButton className="border-0">
-                    <Modal.Title className="font-weight-bold">Product QR</Modal.Title>
+                    <Modal.Title id="qrModalLabel" className="font-weight-bold">Product QR</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="text-center">
                     <div className="fw-bold mb-2">{qrProduct?.name}</div>
@@ -581,6 +637,53 @@ const ProductCatalog = () => {
                     <Button variant="dark" className="rounded-pill" onClick={() => window.print()}>
                         <i className="bi bi-printer me-2"></i>Print
                     </Button>
+                </Modal.Footer>
+            </Modal>
+            {/* COMMON QR MODAL */}
+            <Modal show={showCommonQr} onHide={() => setShowCommonQr(false)} centered aria-labelledby="commonQrModalLabel">
+                <Modal.Header closeButton className="border-0">
+                    <Modal.Title id="commonQrModalLabel" className="font-weight-bold">Common Shop QR</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="text-center">
+                    <div className="fw-bold mb-2">All Products / Shop</div>
+                    <div className="text-muted small mb-3">Scan this to open the shop on your phone</div>
+                    {commonQrDataUrl ? (
+                        <img src={commonQrDataUrl} alt="Common Shop QR" style={{ width: 300, height: 300, borderRadius: 12, background: "#fff", padding: 10 }} />
+                    ) : (
+                        <div className="text-muted">Generating...</div>
+                    )}
+                    <div className="text-muted small mt-3">
+                        Link: <code>{typeof window !== 'undefined' ? `${window.location.origin}/shop` : '/shop'}</code>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="border-0">
+                    <Button variant="outline-secondary" className="rounded-pill" onClick={() => setShowCommonQr(false)}>
+                        Close
+                    </Button>
+                    {commonQrDataUrl && (
+                        <>
+                            <Button variant="light" className="rounded-pill" onClick={() => {
+                                const a = document.createElement('a');
+                                a.href = commonQrDataUrl;
+                                a.download = 'shop-qr.png';
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                            }}>
+                                <i className="bi bi-download me-2"></i>Download
+                            </Button>
+                            <Button variant="dark" className="rounded-pill" onClick={() => {
+                                const w = window.open('', '_blank');
+                                if (!w) return;
+                                w.document.write(`<html><head><title>Shop QR</title></head><body style="display:flex;align-items:center;justify-content:center;margin:0;padding:20px;background:#fff;"><img src="${commonQrDataUrl}" style="max-width:100%;height:auto;border-radius:12px;"/></body></html>`);
+                                w.document.close();
+                                w.focus();
+                                setTimeout(() => { w.print(); }, 300);
+                            }}>
+                                <i className="bi bi-printer me-2"></i>Print
+                            </Button>
+                        </>
+                    )}
                 </Modal.Footer>
             </Modal>
         </AdminLayout>

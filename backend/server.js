@@ -15,8 +15,9 @@ const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000').spl
 console.log('Allowed CORS origins:', allowedOrigins);
 
 
+// Restrict CORS origins to the configured list instead of allowing everything.
 app.use(cors({
-  origin: "*",
+  origin: allowedOrigins,
   credentials: true
 }));
 

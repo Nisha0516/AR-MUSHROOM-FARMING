@@ -74,28 +74,12 @@ function ShopSection() {
             <div className="d-flex justify-content-center mt-4">
               <div className="d-flex flex-wrap justify-content-center gap-2">
                 <Button
-                  variant="dark"
-                  className="rounded-pill fw-bold shadow-sm px-4 py-2"
-                  onClick={() => navigate("/scan-mushroom")}
-                >
-                  <i className="bi bi-camera me-2"></i>
-                  Scan Mushroom
-                </Button>
-                <Button
                   variant="outline-dark"
                   className="rounded-pill fw-bold shadow-sm px-4 py-2"
                   onClick={() => navigate("/scan-product")}
                 >
                   <i className="bi bi-qr-code-scan me-2"></i>
                   Scan Product
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  className="rounded-pill fw-bold shadow-sm px-4 py-2"
-                  onClick={() => window.open("/product-markers", "_blank")}
-                >
-                  <i className="bi bi-display me-2"></i>
-                  Product QRs
                 </Button>
               </div>
             </div>

@@ -58,14 +58,7 @@ function Section3() {
               High-yield spawn, sterilized substrates, and complete grow kits.
             </p>
             <div className="d-flex justify-content-center mt-4">
-              <Button
-                variant="dark"
-                className="rounded-pill fw-bold shadow-sm px-4 py-2"
-                onClick={() => navigate("/scan-mushroom")}
-              >
-                <i className="bi bi-camera me-2"></i>
-                Scan Mushroom
-              </Button>
+              {/* Scan Mushroom removed — use Scan Product from Shop page */}
             </div>
           </Col>
         </Row>

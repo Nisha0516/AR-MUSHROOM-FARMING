@@ -723,14 +723,10 @@ export default function ProductAR() {
         <div className="ar-controls">
           <button
             className="info-btn"
-            onClick={() => alert(`Tip: Use a product QR (recommended: ${window.location.origin}/product/<PRODUCT_ID>) or ${PRODUCT_PREFIX}<PRODUCT_ID>. You can show printable QRs on /product-markers.`)}
+            onClick={() => alert(`Tip: Use a product QR (recommended: ${window.location.origin}/product/<PRODUCT_ID>) or ${PRODUCT_PREFIX}<PRODUCT_ID>.`)}
           >
             <IoInformationCircleOutline /> Instructions
           </button>
-          <a className="info-btn ar-link-btn" href="/product-markers" target="_blank" rel="noreferrer">
-            <i className="bi bi-display me-2"></i>
-            Open Product Board
-          </a>
           <a className="info-btn ar-link-btn" href="/admin/catalog" target="_blank" rel="noreferrer">
             <i className="bi bi-speedometer2 me-2"></i>
             Open Admin Catalog
