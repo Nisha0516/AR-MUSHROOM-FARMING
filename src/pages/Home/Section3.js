@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Alert, Button } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import Cards from "../../components/Layouts/Cards";
 import { mushroomAPI } from "../../services/api";
-import { useNavigate } from "react-router-dom";
+// no router usage here
 
 // Rating Logical Data
 const renderRatingIcons = (rating) => {
@@ -23,7 +23,6 @@ const renderRatingIcons = (rating) => {
 };
 
 function Section3() {
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

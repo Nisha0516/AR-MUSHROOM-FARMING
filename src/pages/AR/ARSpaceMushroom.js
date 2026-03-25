@@ -8,21 +8,6 @@ function safeArr(v) {
   return Array.isArray(v) ? v : [];
 }
 
-function normalizeModelUrl(raw, origin) {
-  const v = String(raw || "").trim();
-  if (!v) return "";
-  try {
-    const u = new URL(v);
-    if (u.pathname.startsWith("/uploads/")) return new URL(u.pathname, origin).toString();
-  } catch (e) {
-    // ignore
-  }
-  try {
-    return new URL(v, origin).toString();
-  } catch (e) {
-    return v;
-  }
-}
 
 export default function ARSpaceMushroom() {
   const { markerKey } = useParams();

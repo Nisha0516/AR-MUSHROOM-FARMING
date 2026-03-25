@@ -20,29 +20,6 @@ function getUses(product) {
   return ["Mushroom cultivation", "Farm workflow", "Educational demo"];
 }
 
-function normalizeModelUrl(raw, origin) {
-  const v = String(raw || "").trim();
-  if (!v) return "";
-
-  // Fix common DB values that break on phone HTTPS (mixed-content).
-  // Example stored: http://localhost:5000/uploads/file.glb -> use same-origin /uploads/...
-  try {
-    const u = new URL(v);
-    if (u.pathname.startsWith("/uploads/")) {
-      // Any absolute URL to /uploads should be mapped to same-origin /uploads.
-      return new URL(u.pathname, origin).toString();
-    }
-  } catch (e) {
-    // not an absolute URL; continue
-  }
-
-  // Relative path like /uploads/x.glb
-  try {
-    return new URL(v, origin).toString();
-  } catch (e) {
-    return v;
-  }
-}
 
 export default function ARSpaceProduct() {
   const { id } = useParams();

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Button, Form, Badge, Modal, Spinner, Alert, Image, InputGroup } from "react-bootstrap";
-import QRCode from "qrcode";
 import AdminLayout from "./AdminLayout";
 import { mushroomAPI, uploadAPI, getAssetUrl } from "../../services/api";
 import "../../styles/AdminStyle.css";
